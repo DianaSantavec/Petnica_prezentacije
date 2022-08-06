@@ -1,0 +1,1 @@
+test:test_password::unix_workshop:student:/home/test:/bin/bash
