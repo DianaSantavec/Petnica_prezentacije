@@ -7,7 +7,7 @@ marp: true
 # UNIX
 ## Diana Šantavec
 diana.santavec@gmail.com
-01.08.2022.
+12.08.2022.
 
 ---
 # Istorija
@@ -62,7 +62,7 @@ diana.santavec@gmail.com
   * `$` - graničnik za kraj prompt-a
 ---
 
-# Fajl sistem
+# Sistem fajlova
 ![image-name](unix_tree.png)
 
 ---
@@ -89,7 +89,7 @@ diana.santavec@gmail.com
     * jedinstven ID
     * `ls -i`
 * Za pristup otvorenim fajlovima - `struct file`
-    * file descriptor
+    * deskriptor fajlova
 ---
 
 # Direktorijum
@@ -132,15 +132,15 @@ diana.santavec@gmail.com
 ---
 
 # `pwd`
-* ispis putanje na kojoj se korisnik trenutno nalazi
+* Ispis putanje na kojoj se korisnik trenutno nalazi
 ---
 
 # `mv`
-* premesti fajl
-* takođe i za promenu naziva fajla
-* opcije: 
+* Premeštanje fajla
+* Takođe i za promenu naziva fajla
+* Opcije: 
     * -v - verbose (ispis početne i krajnje destinacije fajla)
-* parametri:
+* Parametri:
     * lokacija fajla
     * lokacija gde se fajl kopira
 ---
@@ -211,9 +211,13 @@ diana.santavec@gmail.com
 ---
 
 # History
-* ctrl+r i hository file & history -> !102 (bang102)
-    HISTTIMEFORMAT="%Y-%m-%d %T " - poslednji space da stavi razmak izmedju datuma i komande (moze imati problem sa datumom)
-    ~/.bashrc (objasniti i sta je) HISTCONTROL ignore lines include space (ako se unese space pre komande nece se pojaviti u istoriji)
+* `history`
+* ~/.bash_history
+* komande sa razmakom se ne upisuju
+* HISTCONTROL, HISTFILESIZE, HISTFILE, HISTSIZE
+* !101
+* ~/.bashrc
+* HISTTIMEFORMAT="%Y-%m-%d %T "
 ---
 
 # Skraćenice u terminalu 
@@ -258,7 +262,6 @@ diana.santavec@gmail.com
     * command mode
     * insert mode 
 * Visual mode 
-
 ---
 
 # Vim command mode
@@ -564,14 +567,14 @@ done
 # `until`
 * Izvršava se dok se uslov ne ispuni
 ```
-while [[ uslov ]]
+until [[ uslov ]]
 do
     echo hello
 done
 ```
 ---
 
-# for
+# `for`
 * Ukoliko znamo unapred koliko će se puta izvršiti
 
 ```
@@ -580,14 +583,45 @@ do
     echo $variable
 done
 ```
-* Mogu da se naprave oblasti `{1..5}`
+* Mogu i da se naprave oblasti `{1..5}`
 ---
+# `for` - c style
+
+```
+for (( i = 0; i < 10; i++ )); do
+    echo $i
+  done
+```
+---
+
+# `exit`
+* `exit N`
+* 1 - sve greske
+* 2 - Misuse of shell builtins
+* 126 - komanda ne može da se izvrši
+* 127 - komanda nije nađena
+* 128 - loš argument za `exit` komandu
+* 128 + n - fatal error za kod *n*
+* 130 - prekinuo ga ctrl+c
+* 255* - exit status out of range
+---
+
 
 # Vežba
 
 * Napraviti skiriptu koja će primati brojeve kao parametre (proveriti na početku da li su **svi** parametri brojevi)
 * Sabrati sve prosleđene brojeve
 * Ukoliko suma brojeva prelazi 100 ispisati upozorenje
+---
+
+# Pokretanje u pozadini
+* `&`
+    * Izvršava komandu u pozadini
+* `ctrl+z `
+    * salje SIGTSP - pauzira proces i šalje u pozadinu
+* `fg`
+    * Nastavlja izvršavanje pauziranog procesa
+* _Demonstracija_
 ---
 
 # Interesantne price
@@ -661,20 +695,36 @@ done
 
 # `grep` i regex izrazi
 * 'first|second'
-* 
+* ^pocetak
+* kraj$
+* ^samo$
+* ^$
+---
+
+# `grep` i regex izrazi
+* slo.o
+* acce[np]t
+* `grep '^[A-Z]' file.txt`
+---
+# `grep` i regex izrazi
+* \* - 0 ili više puta
+* ?	- 0 ili jednom
+* \+ - jednom ili više puta
+* {n} - tačno *n* puta
+* {n,} - bar *n* puta
+* {,m} - najviše *m* puta
+* {n,m} - između *n* i *m* puta
 ---
 
 # `sed`
+* Stream editor
+* Zamena reči
+    * `sed 's/unix/linux/' test.txt`
+* Ispis izmenjenih linija
+* Brisanje linija
 ---
 
-# Pokretanje u pozadini
-* `&`
-    * Izvršava komandu u pozadini
-* `ctrl+z `
-    * salje SIGTSP - pauzira proces i šalje u pozadinu
-* `fg`
-    * Nastavlja izvršavanje pauziranog procesa
-* _Demonstracija_
+# `awk`
 ---
 
 
