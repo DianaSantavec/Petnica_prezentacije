@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Hello</h2>
+
+<script>
+myFunction();
+
+function myFunction3(){
+  throw new Error('Stack Trace Error');
+}
+
+function myFunction2(){
+  myFunction3();
+}
+
+function myFunction() {
+  myFunction2();
+}
+
+</script>
+
+</body>
+</html>
+

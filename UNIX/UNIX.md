@@ -424,6 +424,8 @@ diana.santavec@gmail.com
 * hash-bang: `#!/bin/bash`
 * Ekstenzija `.sh`
 * `chmod +x script_name.sh`
+* Pokreće se navođenjem putanje do fajla
+    * U trenutnom direktorijumu ./ime_fajla
 ---
 
 # Hello world
@@ -609,7 +611,7 @@ for (( i = 0; i < 10; i++ )); do
 
 # Vežba
 
-* Napraviti skiriptu koja će primati brojeve kao parametre (proveriti na početku da li su **svi** parametri brojevi)
+* Napraviti skiriptu koja će primati brojeve kao parametre (pretpostaviti da je korisnik uneo brojeve)
 * Sabrati sve prosleđene brojeve
 * Ukoliko suma brojeva prelazi 100 ispisati upozorenje
 ---
@@ -719,12 +721,22 @@ for (( i = 0; i < 10; i++ )); do
 # `sed`
 * Stream editor
 * Zamena reči
-    * `sed 's/unix/linux/' test.txt`
 * Ispis izmenjenih linija
 * Brisanje linija
 ---
+# `sed` - primer
+* `sed -i 's/unix/linux/g' test.txt`
+    * s - substitute: pronađi i zameni
+    * g - global: sva ponavljanja
+    * -i - zapiši izmene u fajl
+---
+# `sed` - primer
+* `sed 's/.\{4\}/& /g'`
+---
 
 # `awk`
+* skriptni jezik za manipulaciju podacima
+* generisanje izveštaja
 ---
 
 
