@@ -1,0 +1,478 @@
+\documentclass{beamer}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\usepackage{wasysym}
+
+
+
+\usetheme[]{Madrid}
+
+\title{Bugs, bugs everywhere}
+\subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
+\author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
+\institute{Istraživačka stanica Petnica}
+\titlegraphic{\includegraphics[width=2cm]{img/Petnica.png}}
+\date{23.04.2023.}
+
+
+\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Uvod}
+\begin{center}
+    \includegraphics[width=10cm]{img/bugs_bugsEverywhere.png}
+\end{center}
+\end{frame}
+
+\section{Bagovi sa okruženjem}
+
+\begin{frame}
+\frametitle{printf ne radi?}
+\begin{itemize}
+    \item printf je funkcija za ispis teksta u C-u \newline
+    \item \lstinline|pritnf("Hello world");| \newline
+    \item Prelazak u novi red je kontrolni karakter \textbackslash n
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{printf ne radi?}
+\begin{itemize}
+    \item \textbf{Situacija:} C program se pokreće u virtualnoj mašini i ispisuje poruku na terminal \newline
+    \item \textbf{Problem:} Tekst iz programa se nasumično ne ispisuje
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{printf ne radi?}
+\begin{itemize}
+    \item \textbf{Obrazloženje:} Linija terminala nije radila line wrap \newline
+    \begin{center}
+        \includegraphics[width=10cm]{img/terminal.png}
+    \end{center}
+    \item PS1 ili \lstinline|set horizontal-scroll-mode-off| \newline
+    \item \textbf{Rešenja: }
+    \begin{itemize}
+        \item Dodavanje nove linije na kraju ispisa \newline
+        \item Ispravljanje vrednosti env varijabli \newline
+    \end{itemize}  
+    
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Ali radi na mom računaru...}
+\begin{itemize}
+    \item \textbf{Situacija:} Kod pisan na Windows-u radi, ali kada se prebaci na Linux sistem i kompajlira, vraća grešku \newline
+    \item \textbf{Problem:} Različiti kraj linija \newline
+    \item \textbf{Obrazloženje:} na Windows-u se koristi CRLF a na Linux-u LF
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ali radi na mom računaru...}
+    \begin{itemize}
+        \item DOS/Windows: pratio mašine za pisanje \newline
+        \item Unix: izbacio CR        \newline
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=12cm]{img/Table.png}
+    \end{center}
+    \end{frame}
+
+\begin{frame}
+    \frametitle{Ali radi na mom računaru...}
+    \begin{center}
+        \includegraphics[width=11cm]{img/ASCII.png}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Weird filenames making weird behaviours}
+\begin{itemize}
+    \item Komanda se sastoji od naziva komande i liste parametara razdvojenih razmakom \newline
+    \item \lstinline|touch naziv1 naziv2 naziv3| \newline
+    \item Nova linija označava kraj komande \newline
+    \item \textbf{Situacija:} Pokrećemo komandu sa listom fajlova i dobijamo grešku da ne postoji komanda "naziv fajla" \newline
+        
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Wierd filemanes making weird behaviours}
+    \begin{itemize}
+        \item \textbf{Problem:} Ime fajla je bilo nova linija \newline
+        \item \textbf{Obrazloženje: } \begin{enumerate}
+            \item Linux dozvoljava da nazivi fajlova budu specijalni karakteri \newline
+            \item Komanda može da čita listu parametara iz fajla
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Stari UNIX-ovi bagovi}
+    \begin{itemize}
+        \item \lstinline|/etc/passwords| \newline
+        \item \lstinline|lpr| \newline
+        \item \lstinline|setuid| proces koji ga pokrene ima sva prava \newline
+        \item prilikom nasilnog prekidanja pravi se file core u koji se upisuje poruka o grešci \newline
+        \item može se napraviti simbolički link na \lstinline|/etc/passwords|
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Još bagova sa okruženjem?}
+    \begin{itemize}
+        \item Dirty cow \newline
+        \item PwnKit \newline
+        \item Y2K i Y2K38 problem \newline
+        \item log4j \newline
+    \end{itemize}
+\end{frame}
+
+
+\section{Bagovi sa tipovima}
+
+\begin{frame}
+    \frametitle{Bagovi sa tipovima}
+    \begin{center}
+        \begin{tabular}{ |c|c|c| }%{width}[pos]{cols}
+            \hline
+            Tip & Veličina u bajtovima & Opseg vrednosti \\
+            \hline
+            bool & 1 (8bit) & True / False \\
+            \hline
+            char & 1 (8bit) & od -128 do 127 \\
+            \hline
+            uint16\_t & 2 (16bit) & od 0 do 65535 \\
+            \hline
+            int32\_t & 4 (32bit) & od -2,147483,468 do 2,147483,469 \\            
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bagovi sa tipovima}
+    
+    \begin{itemize}
+        \item \textit {IEEE 754} \newline
+        \item 32bit
+         \begin{itemize}
+            \item znak 1 bit
+            \item eksponent 8 bitova
+            \item mantisa (frakcija) 23 bita
+        \end{itemize}
+        \item 64bit
+         \begin{itemize}
+            \item znak 1 bit
+            \item eksponent 11 bitova
+            \item mantisa (frakcija) 52 bita
+        \end{itemize}
+    \end{itemize}
+
+    \begin{center}
+        \includegraphics[width=10cm]{img/32bit_ieee754.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Greška "pas 38"}
+    \begin{itemize}
+        \item \textbf{Situacija: } Imena pasa se upisuju u bazu, ali ako ima više pasa sa istim nazivom doda im se broj 1,2,... \newline
+        \item \textbf{Problem: } Kada u bazi postoji 37 pasa sa istim imenom, 38. ne može da se upiše \newline
+        \item 00100110 (8bit)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Greška "pas 38"}
+    \begin{itemize}
+        \item \textbf{Obrazloženje:} u bazi je polje char (6) a brojevi se zapisuju u formatu rimskih brojeva \newline
+        \item XXXVIII
+    \end{itemize}
+
+    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{NULL - "billion-dollar mistake"}
+    \begin{itemize}
+        \item null pointer exception \newline
+        \item Tony Hoare uvodi NULL u ALGOL W (1965)\newline
+        \item Naslednik ALGOL 60 (1960) \newline
+        \item Konferencija 2009.
+    \end{itemize}
+\end{frame}
+    
+\begin{frame}
+    \frametitle{NULL - "billion-dollar mistake"}
+    \begin{center}
+        \includegraphics[width=6.5cm]{img/ALGOL60.jpg}    
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{NULL - "bilion-dollar mistake"}
+    \begin{itemize}
+        \item \textbf{Situacija: }
+        \begin{itemize}
+            \item ALGOL W uvodi RECORD (class/struct) \newline
+            \item Potrebna referenca na stack-u na RECORD \newline
+            \item Uvodi se NULL, kada ne postoji podatak na heap-u
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{NULL - "billion-dollar mistake"}
+    \begin{lstlisting}
+        RECORD PERSON (
+            STRING(25) NAME;
+            INTEGER AGE;
+            REFERENCE (PERSON) FATHER, MOTHER
+        );
+        // pretpostavimo da postoji referenca R 
+        // koja pokazuje na neku osobu
+        REFERENCE(PERSON)P, M;
+        P := FATHER(FATHER(R));
+        IF P = NULL THEN
+            M := MOTHER(P)
+        ELSE
+            P
+    \end{lstlisting}
+    \begin{itemize}
+        \item \textit{\href{https://en.wikipedia.org/wiki/ALGOL_W}{Link ka referenci}}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Najskuplja '-'}
+    
+    \begin{itemize}
+        \item Mariner 1 - 1960thi NASA \newline
+        \item Matematičke formule se pretvarale u kod \newline
+        \item $\overline{R}$ "smoth over period of time" \newline
+        \item Ali greškom upisano $R$ \newline
+        \item 18.000.000\$
+    \end{itemize}
+\end{frame}
+
+\section*{Bagovi u svemiru}
+\begin{frame}
+    \frametitle{Greška u orbiti Marsa}
+    \begin{itemize}
+        \item Mars Climate Orbiter \newline
+        \item \textbf{Situacija:} Orbiter prilazi Marsu i odjednom pada \newline
+        \item \textbf{Problem: } Različite merne jedinice (mm i in) \newline
+        \item Lockheed Martin koristio inče \newline
+        \item 327.000.000\$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Greška u orbiti Marsa}
+    \begin{center}
+        \includegraphics[width=10cm]{img/mars.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ariane 5}
+    \begin{itemize}
+        \item European Space Agency \newline
+        \item Floating point bug - integer overflow \newline
+        \item \textbf{Situacija:} Raketa je nedugo nakon uzletanja skrenula i eksplodirala \newline
+        \item 500.000.000\$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ariane  5}
+    \begin{itemize}
+        \item \textbf{Problem:} 64bitna floating-point vrednost je konvertovana u 16bitni označeni integer \newline
+        \item Broj koji predstavlja horizontalnu brzinu je bio veći od 32767 \newline
+        \item Debugging podaci iscureli u memoriju za navigaciju \newline
+        \item Backup računar je imao isti kod \newline
+        \item Ili? Sistem za samouništenje se upalio
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ariane 5}
+    \begin{center}
+        \includegraphics[width=12cm]{img/ariane5.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Slični bagovi}
+    \begin{itemize}
+        \item Boeing 737 MAX \newline
+        \item Knight Capital
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bagovi u igricama}
+    \begin{itemize}
+        \item Sa kakvim bagovima ste se susretali?
+    \end{itemize}
+\end{frame}
+
+\section{Bagovi u igricama}
+\begin{frame}
+    \frametitle{Intentional bugs}
+    \begin{itemize}
+        \item Grey-box testing \newline
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=10cm]{img/intentional_bugs.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minecraft}
+    \begin{center}
+        \includegraphics[width=12cm]{img/farlands.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minecraft}
+    \begin{center}
+        \includegraphics[width=7cm]{img/minecraft_farlands.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minecraft}
+    \begin{itemize}
+        \item Sky far lands \newline
+        \item Void far lands \newline
+        \item Far lands \newline
+        \item Vertex far lands \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minecraft}
+    \begin{itemize}
+        \item 12.550.824 \newline
+        \item Generisanje terena - Perlin noise \newline
+        \item Generisanje random brojeva, ali je teren "gladak" \newline
+        \item 16 octaves
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Minecraft}
+    \begin{itemize}
+        \item 171.103 pixela na mapi predstavljaju jedan blok \newline
+        \item $12.550.824 = 2^{31} / 171.103$ \newline
+        \item integer overflow \newline
+        \item predmeti se drugačije ponašaju \newline
+        \item problem sa zvukom
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Wing Commander}
+    \begin{center}
+        \includegraphics[width=10cm]{img/wing_commander.png}
+    \end{center}
+    \begin{itemize}
+        \item Poruka greške pretvorena u pozdravnu poruku
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Igrica Force 21}
+    \begin{itemize}
+        \item Kamera prestane da prati igrača \newline
+        \item Nasleđuje klasu PhysicalObject \newline
+        \item Trpi damage i biva "ubijena"
+    \end{itemize}
+\end{frame}
+
+\section*{}
+\begin{frame}
+    \frametitle{Dodatni saveti}
+    \begin{itemize}
+        \item Nazivi fajlova i poruke u programu \newline
+        \item Ne kopirati komande/kod bez razumevanja \newline
+        \item Debugger-i su prijatelji \smiley
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Dodatni saveti}
+    \begin{itemize}
+        \item Pisanje testova \newline
+        \item Rekurzija \newline
+        \item Endianness
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Reference}
+    \begin{itemize}
+        \item Kolege \smiley \newline
+        \item \href{https://youtu.be/qC_ioJQpv4E}{Programming's Greatest Mistakes - Mark Rendle - NDC Copenhagen 2022} \newline
+        \item \href{https://youtu.be/6xrGo1IIB3w}{FAIL - Kevlin Henney - GOTO 2022} \newline
+        \item Dirty programming, Aleksandar Beserminji \newline
+        \item \href{https://youtu.be/M_iiXaaF5T4}{I made a Game with Intentional Bugs} \newline
+        \item \href{https://youtu.be/4f5M1fHxRrQ}{Minecraft - Farlands}
+    \end{itemize}
+    \end{frame}
+
+
+\begin{frame}
+    \frametitle{Diskusija}
+    \begin{itemize}
+        \item Kakve ste bagove sretali?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{HVALA NA PAŽNJI!}
+    \begin{center}
+        \Huge Pitanja?    
+    \end{center}
+    
+
+    
+
+\end{frame}
+
+\end{document}
