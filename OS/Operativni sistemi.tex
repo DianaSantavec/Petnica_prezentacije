@@ -1,0 +1,590 @@
+\documentclass{beamer}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\usepackage{wasysym}
+
+
+
+\usetheme[]{Antibes}
+
+\title{Operativni sistemi}
+%\subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
+\author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
+\institute{Istraživačka stanica Petnica}
+\titlegraphic{\includegraphics[width=2cm]{img/Petnica.png}}
+\date{23.04.2023.}
+
+
+\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Sadržaj}
+\begin{itemize}
+    \item Pojam
+    \item Učitavanje operativnog sistema
+    \item Procesi
+    \item Planeri procesa
+    \item Zaštita memorije
+    \item Fajl sistemi
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Uvod}
+    \begin{center}
+        \large{Šta je operativni sistem?}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Uvod}
+    \begin{itemize}
+        \item Program koji omogućava aplikacijama jednostavniji pristup hardveru \newline
+        \item Kontroliše izvršavanje aplikacija \newline
+        \item Olakšava pisanje programa visokog nivoa \newline
+        \item Omogućava nezavisnost programa od hardvera \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Istorija}
+    \begin{itemize}
+        \item Prvi računari su samo izvršavali dati program (ENIAC 1945)
+        \item batch: učita se više programa pa se izvrše
+        \item 1970 - 1980 višekorisnički
+        \item 1980 - 1990 prvi personalni (CP/M)
+        \item ...
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Učitavanje operativnog sistema}
+    \begin{center}
+        \large{Šta se desi kada pritisnemo dugme?}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Učitavanje operativnog sistema}
+    \begin{itemize}
+        \item Prilikom učitavanja računara operativni sistem tek treba da se učita iz neke trajne memorije \newline
+        \item BIOS-MBR
+        \item UEFI-GPT
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Učitavanje operativnog sistema}
+    \begin{center}
+        \large{BIOS-MBR}
+    \end{center}
+\end{frame}
+
+\section*{Učitavanje operativnog sistema}
+\begin{frame}
+    \frametitle{BIOS-MBR}
+    \begin{itemize}
+        \item BIOS (Basic Input/Output System) \newline
+        \item Sadrži rutine koje omogućavaju detekciju hardvera (monitor, miš, tastatura, disk, RAM,...) \newline
+        \item Učitava se sa čipa \newline
+        \item Testira hardver
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{BIOS-MBR}
+    \begin{itemize}
+        \item Boot sector (cilindar 0, glava 0, sektor 0) \newline
+        \item 512B \newline
+        \item Asembler \newline
+        \item \href{https://youtu.be/1UzTf0Qo37A}{Boot Sector Games}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{BIOS-MBR}
+    Ubaciti slike koda za boot sektor
+\end{frame}
+
+\subsection*{BIOS-MBR}
+\begin{frame}
+    \frametitle{MBR (Master Boot Record)}
+    \begin{itemize}
+        \item 440B \newline
+        \item Svaki hard disk ga sadrži \newline
+        \item Sadrži tabelu particija \newline
+        \item Bootstrap Code
+        \begin{itemize}
+            \item Traži iz tabele fajl koji će izvršiti boot i učitava ga \newline
+        \end{itemize} 
+        \item Boot Signature (0x55 0xAA)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bootloader}
+    \begin{itemize}
+        \item Nalazi se na određenoj particiji \newline
+        \item Koji operativni sistem, gde, odakle, parametri,\dots \newline
+        \item NTLDR, BOOTMGR, GRUB2, itd.
+    \end{itemize}
+\end{frame}
+\subsection*{}
+\begin{frame}
+    \frametitle{Učitavanje operativnog sistema}
+    \begin{itemize}
+        \item Učitavanje fajl sistema \newline
+        \item Učitavanje konfiguracionih fajlova \newline
+        \item Lista operativnih sistema (ako ih ima više) \newline
+        \item Pokretanje odabranog
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Pokretanje operativnog sistema}
+    \begin{itemize}
+        \item Prvi proces u Linuksu - init \newline
+        \item Pokreće ostale procese \newline
+        \item systemd \newline
+        \item \textit{primer koda}
+    \end{itemize}
+\end{frame}
+
+\section*{}
+\begin{frame}
+    \frametitle{Procesi}
+    \begin{center}
+        \large{Šta je proces?}
+    \end{center}
+\end{frame}
+
+\section*{Procesi}
+\begin{frame}
+    \frametitle{Pojam}
+    \begin{itemize}
+        \item Program kada se izvršava \newline
+        \item Sadrži podatke o zauzetim ulazno/izlaznim uređajima, korisniku ,zauzetim fajlovima,\dots \newline
+        \item \textit{primer kod}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Proces u memoriji}
+    \begin{center}
+        \includegraphics[width=4cm]{img/process_in_memory.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Životni ciklus procesa}
+    \begin{center}
+        \includegraphics[width=11cm]{img/process_states.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fork}
+    \begin{itemize}
+        \item Pravi kopiju (dete) orignalnog procesa (roditelj) \newline
+        \item gašenje/pucanje roditeljkog procesa prouzrokuje gašenje deteta procesa \newline
+        \item dete proces zadržava i otvorene fajlove, ali su tokovi različiti
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Niti (thread)}
+    \begin{itemize}
+        \item Deo procesa \newline
+        \item Podela poslova na manje delove \newline
+        \item Paralelizacija procesa 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Broj korisnika}
+    \begin{itemize}
+        \item singleuser \newline
+        \item multiuser
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Izvršavanje procesa}
+    \begin{itemize}
+        \item Sekvencijalno \newline
+        \item Time sharing \newline
+        \item Paralelno
+    \end{itemize}
+\end{frame}
+
+\subsection*{Izvršavanje procesa}
+\begin{frame}
+    \frametitle{Sekvencijalno}
+    \begin{center}
+        \includegraphics[width=11cm]{img/sekvencijalno.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Time sharing}
+    \begin{center}
+        \includegraphics[width=11cm]{img/time_sharing.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Paralelno}
+    \begin{center}
+        \includegraphics[width=9cm]{img/paralelno.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Five philosopher problem}
+    \begin{itemize}
+        \item Pet filozofa sedi za okruglim stolom i na smenu rezmišljaju i jedu. 
+        Svaki ima ispred sebe tanjir sa špagetama i između svaka dva tanjira se nalazi viljuška.
+         Da bi mogao da jede, filozofu trebaju dve viljuške. \newline
+        \item Zastoj (deadlock)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Five philosopher problem}
+    \begin{center}
+        \large{Demonstracija i rešenje}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Zastoj}
+
+    \begin{center}
+        \includegraphics[width=10cm]{img/deadlock.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Rešavanje zastoja}
+    \begin{itemize}
+        \item Sprečavanje \newline
+        \item Dozvoliti da se desi, rešiti \newline
+        \item Ako se desi restartovati sistem (Windowd, Unix)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    \begin{itemize}
+        \item Omogućava da ne može više procesa istovremeno da koristi neki resurs \newline
+        \item Operacije: \begin{itemize}
+            \item Čekaj
+            \item Signal
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section*{}
+\subsection*{}
+\begin{frame}
+    \frametitle{Planeri procesa}
+    \begin{center}
+        \large{Kako operativni sistem smenjuje procese?}
+    \end{center}
+\end{frame}
+
+\section*{Planeri procesa}
+\begin{frame}
+    \frametitle{Pojam}
+    \begin{itemize}
+        \item Programer ne mora da vodi računa da li će proces prepuštati resurse \newline
+        \item Omogućava "bolju" smenu procesa u zavisnosti od potreba operativnog sistema \newline
+        \item Omogućavaju efikasniju raspodelu resursa \newline
+        \item Cilj da se maksimizuje upotreba procesa i minimizuje vreme čekanja
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tipovi}
+    \begin{itemize}
+        \item CPU \newline
+        \item non-preemptive \begin{itemize}
+            \item Proces ne može biti zaustavljen u toku izvršavanja \newline
+        \end{itemize}
+        \item preemptive \begin{itemize}
+            \item Planer procesa može prekinuti izvršavanje procesa
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Bitna vremena}
+    \begin{itemize}
+        \item Vreme izvršavanja (execution time) \newline
+        \item Vreme ulaska u spremno stanje (arrival time) \newline
+        \item Vreme završavanja (finish time) \newline
+        \item Vreme izvršavanja na procesoru (CPU execution time)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tipovi procesa}
+    \begin{itemize}
+        \item Većinu izvršavanja iziskuju procesorkse resurse (CPU bound) \newline
+        \item Većinu izvršavanja provode čekajući signal (I/O bound)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Poznati planeri procesa}
+    \begin{itemize}
+        \item first-come first-served \newline
+        \item longest job first \newline
+        \item shortest job first \newline
+        \item round robin \newline
+        \item prioritetni
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{U realnom vremenu}
+    \begin{itemize}
+        \item hard real time \newline
+        \item soft real time
+    \end{itemize}
+\end{frame}
+
+\section*{}
+\subsection*{}
+\begin{frame}
+    \frametitle{Upravljane memorijom}
+\end{frame}
+
+\section*{Upravljanje memorijom}
+\begin{frame}
+    \frametitle{Pojam}
+    \begin{itemize}
+        \item Vođenje računa o popunjavanju (prazni/slobodni) \newline
+        \item Dodela memorije \newline
+        \item Oslobađanje memorije
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Adrese}
+    \begin{itemize}
+        \item Simboličke adrese \begin{itemize}
+            \item Konstante, promenljive, labele instrukcija \newline
+        \end{itemize}
+        \item Relativne adrese \begin{itemize}
+            \item Kompajler simboličke prebacuje u relativne \newline
+        \end{itemize}
+        \item Fizičke adrese \begin{itemize}
+            \item Kada se program učita u memoriju
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Swap}
+    \begin{itemize}
+        \item Korišćenje trajen memorije za nadoknadu RAM-a \newline
+        \item Više memorije \newline
+        \item Duže vreme za učitavanje programa (slanje na disk je sporije)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Paging}
+    \begin{itemize}
+        \item Podela procesa na blokove \newline
+        \item Jednaki blokovi RAM-a \newline
+        \item Ne moraju biti uzastopni \newline
+        \item Demand Paging
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Adrese}
+    \begin{itemize}
+        \item Virtualne (protected mode) \begin{itemize}
+            \item generiše program \newline
+            \item ne mora ceo program biti stalno u memoriji \newline
+        \end{itemize}
+        \item Fizičke \begin{itemize}
+            \item MMU
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Alokacija memorije}
+    \begin{itemize}
+        \item First fit \newline
+        \item Best fit \newline
+        \item Worst fit
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fragmentacija}
+    \begin{itemize}
+        \item interna fragmentacija \newline
+        \item eksterna fragmentacija
+    \end{itemize}
+\end{frame}
+
+\subsection*{Fragmentacija}
+\begin{frame}
+    \frametitle{Interna fragmentacija}
+    \begin{itemize}
+        \item Pojavljuje se kadaje memorija izdeljena u fiksne blokove \newline
+        \item Procesu se dodeli više memorije nego što mu treba \newline
+        \item Ako se memorija ne deli u blokove, fragmentacija će biti izbegnuta
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Eksterna fragmentacija}
+    \begin{itemize}
+        \item Pojavljuje se kada su blokovi proizvoljne ili promenljive veličine \newline
+        \item Iako postoji dovoljno memorije, memorija je "razbacana" \newline
+        \item Rešenje je da se sva slobodna memorija pregrupiše u jedan blok \newline
+        \item Drugo rešenje je paging
+    \end{itemize}
+\end{frame}
+
+\section*{}
+\subsection*{}
+\begin{frame}
+    \frametitle{Fajl sistem}
+    \begin{center}
+        \large{Šta je zapravo fajl?}
+    \end{center}
+\end{frame}
+
+\section*{Fajl sistem}
+\begin{frame}
+    \frametitle{Fajl}
+    \begin{itemize}
+        \item Informacije sačuvane u trajnoj memoriji \newline
+        \item Prava pristupa (čitanje, pisanje, izvrpavanje)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fajl}
+    \begin{itemize}
+        \item Različiti tipovi fajlova (obični, direktorijumi, specijalni) \newline
+        \item Imaju različite strukture \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Pristup fajlu}
+    \begin{itemize}
+        \item Sekvencijalno \newline
+        \item Direktno/nasumično \newline
+        \item Preko indeksa
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Alokacija memorije za fajl}
+    \begin{itemize}
+        \item Contigous Allocation \begin{itemize}
+            \item Zauzeta memorija za fajl je kontinualna \newline
+        \end{itemize}
+        \item Linked Allocation \begin{itemize}
+            \item Sadrži pokazivače na različite blokove diska \newline
+        \end{itemize}
+        \item Indexed Allocation \begin{itemize}
+            \item Sadrži listu svih indeksa blokova fajla
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Direktorijum}
+    \begin{itemize}
+        \item Sadrži više fajlova \newline
+        \item Kreiranje fajlova \newline
+        \item Brisanje fajlova \newline
+        \item Pretraga fajlova \newline
+        \item Izlistavanje fajlova
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Direktorijum}
+    \begin{itemize}
+        \item Jedan nivo \newline
+        \item Dva nivoa (korisnik/direktorijum/fajl) \newline
+        \item Stablo \newline
+        \item Graf
+    \end{itemize}
+\end{frame}
+
+\section*{}
+\subsection*{}
+
+\begin{frame}
+    \frametitle{Dokle smo stigli?}
+    \begin{itemize}
+        \item Učitavanje operativnog sistema \newline
+        \item Procesi \newline
+        \item Planeri procesa \newline
+        \item Upravljanje memorijom \newline
+        \item Fajl sistem
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Šta dalje?}
+    \begin{itemize}
+        \item Virtualizacija \newline
+        \item Cloud \newline
+        \item Distribuirani sistemi \newline
+        \item Operativni sistemi koji se izvršavaju u realnom vremenu \newline
+        \item Embedded sistemi \newline
+        \item \dots
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{HVALA NA PAŽNJI!}
+    \begin{center}
+        \Huge Pitanja?    
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
