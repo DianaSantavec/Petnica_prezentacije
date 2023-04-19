@@ -1,0 +1,288 @@
+\documentclass{beamer}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\usepackage{wasysym}
+
+
+
+\usetheme[]{Antibes}
+
+\title{Konkurentno programiranje}
+%\subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
+\author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
+\institute{Istraživačka stanica Petnica}
+\titlegraphic{\includegraphics[width=2cm]{img/Petnica.png}}
+\date{25.04.2023.}
+
+
+\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{Sadržaj}
+    \begin{itemize}
+        \item Podsećanje \newline
+        \item Niti \newline
+        \item Problemi i rešenja \newline
+        \item 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Podsećanje}
+    \begin{itemize}
+        \item Šta je proces? \newline
+        \item Šta su niti? \newline 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Niti}
+    \begin{itemize}
+        \item Zašto su niti bitne?
+    \end{itemize}
+\end{frame}
+
+\section*{Niti}
+\begin{frame}
+    \frametitle{Pojam}
+    \begin{itemize}
+        \item \textit{lightweight process} \newline
+        \item Nezavisni tokovi \newline
+        \item Isti adresni prostor \newline
+        \item Planer procesa ima kontrolu
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Memorija}
+    \begin{itemize}
+        \item Dele u okviru procesa: \begin{itemize}
+            \item Data segment \newline
+            \item Code segment \newline
+            \item Fajlovi \newline
+        \end{itemize}
+        \item Imaju nezavisno: \begin{itemize}
+            \item Stek (Instruction pointer i registri)\newline
+        \end{itemize}
+    \end{itemize}   
+    %Text segment (instructions)
+    %Data segment (static and global data)
+    %BSS segment (uninitialized data)
+    %Open file descriptors
+    %Signals
+    %Current working directory
+    %User and group IDs
+\end{frame}
+
+\begin{frame}
+    \frametitle{Memorija}
+    \begin{center}
+        \includegraphics[width=12cm]{img/process_vs_thread}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Memorija}
+    \begin{itemize}
+        \item Komunikacija je brža nego između procesa \newline
+        \item Zahtevaju manje resursa \newline
+        \item Brže se prave (ne zahtevaju memory map, a ni sve resurse)
+        \item Context switching je brži
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Podaci koje čuva OS}
+    \begin{itemize}
+        \item Thread ID \newline
+        \item Saved registers, stack pointer, instruction pointer \newline
+        \item Stack (local variables, temporary variables, return addresses) \newline
+        \item Signal mask \newline
+        \item Priority (scheduling information)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tipovi}
+    \begin{itemize}
+        \item Single-threaded \newline
+        \item Multithreading \newline
+        \item Kada se blokira neka nit, sve niti nastale od nje bivaju blokirane
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tipovi}
+    \begin{itemize}
+        \item User level thread \newline
+        \item Kernel-level thread
+    \end{itemize}
+
+    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Pravljenje niti}
+
+    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problemi}
+    \begin{center}
+        Kakvi problemi mogu nastati sa multithreading procesima?
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problemi}
+    \begin{center}
+        Šta je deadlock?
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Pristup memoriji}
+    \begin{itemize}
+        \item Imamo dva procesa i pokušavaju da otvore jedan fajl \newline
+        \item Imamo dve niti i pokušavaju da pristupe jednoj javnoj varijabli
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problemi}
+    \begin{itemize}
+        \item Da li sledeći kod može da radi?
+        % Kod koji pravi dve niti i bez provere cita i uvecava variablu
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Da li sledeći kod može da radi?}
+    % dodavanje "lock" zastavice i provera da li je zaključano
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    \begin{center}
+        \includegraphics[width=5cm]{img/semaphore_trafic.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    \begin{itemize}
+        \item Omogućava da ne može više procesa istovremeno da koristi neki resurs \newline
+        \item Operacije: \begin{itemize}
+            \item Čekaj
+            \item Signal
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    %Opis sta su
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    % Primer koda    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mutex}
+    % Opis sta su
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mutex}
+    %Primer koda
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hardverska pomoć}
+    %nesto
+\end{frame}
+
+\begin{frame}
+    \frametitle{Monitori}
+    %opis sta su
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem 5 filozofa - podsećanje}
+
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Five philosopher problem}
+    \begin{itemize}
+        \item Pet filozofa sedi za okruglim stolom i na smenu rezmišljaju i jedu. 
+        Svaki ima ispred sebe tanjir sa špagetama i između svaka dva tanjira se nalazi viljuška.
+         Da bi mogao da jede, filozofu trebaju dve viljuške. \newline
+        \item Zastoj (deadlock)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Five philosopher problem}
+    \begin{center}
+        \large{Demonstracija i rešenje}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem proizvođača i potrošača}
+    
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Problem uspavanog berberina}
+
+    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{HVALA NA PAŽNJI!}
+    \begin{center}
+        \Huge Pitanja?    
+    \end{center}
+\end{frame}
+
+\end{document}

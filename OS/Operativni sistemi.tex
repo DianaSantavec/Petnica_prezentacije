@@ -46,11 +46,11 @@
 \begin{frame}
 \frametitle{Sadržaj}
 \begin{itemize}
-    \item Pojam
-    \item Učitavanje operativnog sistema
-    \item Procesi
-    \item Planeri procesa
-    \item Zaštita memorije
+    \item Pojam \newline
+    \item Učitavanje operativnog sistema \newline
+    \item Procesi \newline
+    \item Planeri procesa \newline
+    \item Zaštita memorije \newline
     \item Fajl sistemi
 \end{itemize}
 \end{frame}
@@ -76,11 +76,11 @@
 \begin{frame}
     \frametitle{Istorija}
     \begin{itemize}
-        \item Prvi računari su samo izvršavali dati program (ENIAC 1945)
-        \item batch: učita se više programa pa se izvrše
-        \item 1970 - 1980 višekorisnički
-        \item 1980 - 1990 prvi personalni (CP/M)
-        \item ...
+        \item Prvi računari su samo izvršavali dati program (ENIAC 1945) \newline
+        \item batch: učita se više programa pa se izvrše \newline
+        \item 1970 - 1980 višekorisnički \newline
+        \item 1980 - 1990 prvi personalni (CP/M) \newline
+        \item \dots
     \end{itemize}
 \end{frame}
 
@@ -94,22 +94,45 @@
 \begin{frame}
     \frametitle{Učitavanje operativnog sistema}
     \begin{itemize}
-        \item Prilikom učitavanja računara operativni sistem tek treba da se učita iz neke trajne memorije \newline
-        \item BIOS-MBR
+        \item Prilikom pokretanja računara operativni sistem tek treba da se učita iz neke trajne memorije \newline
+        \item BIOS-MBR \newline
         \item UEFI-GPT
     \end{itemize}
 \end{frame}
 
+\section*{Učitavanje operativnog sistema}
 \begin{frame}
-    \frametitle{Učitavanje operativnog sistema}
+    \frametitle{Firmware}
+    \begin{itemize}
+        \item Kontrola niskog nivoa \newline
+        \item Na nekoj memoriji unutar uređaja \newline
+        \item BIOS i UEFI
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Particija}
+    \begin{itemize}
+        \item Logička sekcija diska sačinjena od kontinualnih sektora \newline
+        \item Partition table \begin{itemize}
+            \item Broj particija \newline
+            \item Početak particije \newline
+            \item Atributi particije \newline
+        \end{itemize}
+        \item MBR i GPT
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{BIOS-MBR}
     \begin{center}
-        \large{BIOS-MBR}
+        \large{Kako zapravo radi?}
     \end{center}
 \end{frame}
 
-\section*{Učitavanje operativnog sistema}
+\subsection*{BIOS-MBR}
 \begin{frame}
-    \frametitle{BIOS-MBR}
+    \frametitle{BIOS}
     \begin{itemize}
         \item BIOS (Basic Input/Output System) \newline
         \item Sadrži rutine koje omogućavaju detekciju hardvera (monitor, miš, tastatura, disk, RAM,...) \newline
@@ -119,34 +142,135 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{BIOS-MBR}
+    \frametitle{BIOS}
     \begin{itemize}
-        \item Boot sector (cilindar 0, glava 0, sektor 0) \newline
-        \item 512B \newline
-        \item Asembler \newline
-        \item \href{https://youtu.be/1UzTf0Qo37A}{Boot Sector Games}
+        \item Real mode \newline
+        \item 16bit asembler
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{BIOS-MBR}
-    Ubaciti slike koda za boot sektor
+    \frametitle{MBR (Master Boot Record)}
+    \begin{itemize}
+        \item Boot sector (cilindar 0, glava 0, sektor 0) \newline
+        \item 512B \newline
+        \item Limit na 4 primarne particije do najviše 2TB \newline
+        \item Jedna kopija MBR-a \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Dijagram hard diska}
+    \begin{center}
+        \includegraphics[width=7cm]{img/disk.png}
+    \end{center}
 \end{frame}
 
 \subsection*{BIOS-MBR}
 \begin{frame}
     \frametitle{MBR (Master Boot Record)}
     \begin{itemize}
-        \item 440B \newline
         \item Svaki hard disk ga sadrži \newline
-        \item Sadrži tabelu particija \newline
-        \item Bootstrap Code
-        \begin{itemize}
-            \item Traži iz tabele fajl koji će izvršiti boot i učitava ga \newline
-        \end{itemize} 
-        \item Boot Signature (0x55 0xAA)
+        \item Postoje dve strukture: \begin{itemize}
+            \item Classic \newline
+            \item Modern 
+        \end{itemize}
     \end{itemize}
 \end{frame}
+
+\begin{frame}
+    
+    \frametitle{MBR - classic}
+    \begin{itemize}
+        \item Bootstrap Code (440B) \newline
+        \item Tabela partiija (4x16B) \newline
+        \item Boot signature (0x55 0xAA) \newline 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{MBR - modern}
+    \begin{itemize}
+        \item Bootstrap Code (218B + 216B) \newline
+        \item Timestamp (6B) \newline
+        \item Disk signature (6B) \newline
+        \item Partition table (primarne particije) (4x16B) \newline
+        \item Boot signature (0x55 0xAA)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kod u boot sector-u}
+    \begin{lstlisting}[language={[x86masm]Assembler}]
+        mov ah, 0x0e
+        mov al, 'H'
+        int 0x10
+        mov al, 'e'
+        int 0x10
+        mov al, 'l'
+        int 0x10
+        mov al, 'l'
+        int 0x10
+        mov al, 'o'
+        int 0x10
+        jmp $ 
+        times 510 - ( $ - $$ ) db 0
+        dw 0xaa55
+
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Kod u boot sector-u}
+    \begin{center}
+        \includegraphics[width=11cm]{img/hello_boot_secotr.png}
+    \end{center}
+    \begin{itemize}
+        \item \href{https://youtu.be/1UzTf0Qo37A}{Boot Sector Games}
+    \end{itemize}
+\end{frame}
+
+\subsection*{}
+
+\begin{frame}
+    \frametitle{UEFI-GPT}
+    \begin{center}
+        Zašto onda imamo UEFI-GPT?
+    \end{center}
+\end{frame}
+
+\subsection*{UEFI-GPT}
+\begin{frame}
+    \frametitle{UEFI}
+    \begin{itemize}
+        \item Standardizovan \newline
+        \item Nije ograničen na 16bita \newline
+        \item Nije vezan za neku arhitekturu (ne mora da koristi x86 set instrukicja)\newline
+        \item Bolje performance 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{GPT}
+    \begin{itemize}
+        \item Najviše 128 particija \newline
+        \item Limit od 18exabytes \newline
+        \item Više kopija GUID tabela particija \begin{itemize}
+            \item Mogu se čuavati na početku i kraju
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{UEFI}
+    \begin{itemize}
+        \item Safe boot \newline
+        \item Binarni potpis softvera za butovanje \newline
+        \item Emulacija ranijih BIOS firmware-a
+    \end{itemize}
+\end{frame}
+
+\subsection*{}
 
 \begin{frame}
     \frametitle{Bootloader}
@@ -173,7 +297,6 @@
         \item Prvi proces u Linuksu - init \newline
         \item Pokreće ostale procese \newline
         \item systemd \newline
-        \item \textit{primer koda}
     \end{itemize}
 \end{frame}
 
@@ -191,8 +314,10 @@
     \begin{itemize}
         \item Program kada se izvršava \newline
         \item Sadrži podatke o zauzetim ulazno/izlaznim uređajima, korisniku ,zauzetim fajlovima,\dots \newline
-        \item \textit{primer kod}
     \end{itemize}
+    \begin{center}
+        \includegraphics[width=10cm]{img/process_linux.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}
@@ -213,8 +338,8 @@
     \frametitle{Fork}
     \begin{itemize}
         \item Pravi kopiju (dete) orignalnog procesa (roditelj) \newline
-        \item gašenje/pucanje roditeljkog procesa prouzrokuje gašenje deteta procesa \newline
-        \item dete proces zadržava i otvorene fajlove, ali su tokovi različiti
+        \item Gašenje/pucanje roditeljkog procesa prouzrokuje gašenje deteta procesa \newline
+        \item Dete proces zadržava i otvorene fajlove, ali su tokovi različiti
     \end{itemize}
 \end{frame}
 
@@ -230,8 +355,8 @@
 \begin{frame}
     \frametitle{Broj korisnika}
     \begin{itemize}
-        \item singleuser \newline
-        \item multiuser
+        \item Singleuser \newline
+        \item Multiuser
     \end{itemize}
 \end{frame}
 
@@ -267,23 +392,6 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Five philosopher problem}
-    \begin{itemize}
-        \item Pet filozofa sedi za okruglim stolom i na smenu rezmišljaju i jedu. 
-        Svaki ima ispred sebe tanjir sa špagetama i između svaka dva tanjira se nalazi viljuška.
-         Da bi mogao da jede, filozofu trebaju dve viljuške. \newline
-        \item Zastoj (deadlock)
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Five philosopher problem}
-    \begin{center}
-        \large{Demonstracija i rešenje}
-    \end{center}
-\end{frame}
-
-\begin{frame}
     \frametitle{Zastoj}
 
     \begin{center}
@@ -297,17 +405,6 @@
         \item Sprečavanje \newline
         \item Dozvoliti da se desi, rešiti \newline
         \item Ako se desi restartovati sistem (Windowd, Unix)
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Semafor}
-    \begin{itemize}
-        \item Omogućava da ne može više procesa istovremeno da koristi neki resurs \newline
-        \item Operacije: \begin{itemize}
-            \item Čekaj
-            \item Signal
-        \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -365,19 +462,19 @@
 \begin{frame}
     \frametitle{Poznati planeri procesa}
     \begin{itemize}
-        \item first-come first-served \newline
-        \item longest job first \newline
-        \item shortest job first \newline
-        \item round robin \newline
-        \item prioritetni
+        \item First-come first-served \newline
+        \item Longest job first \newline
+        \item Shortest job first \newline
+        \item Round robin \newline
+        \item Prioritetni
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{U realnom vremenu}
     \begin{itemize}
-        \item hard real time \newline
-        \item soft real time
+        \item Hard real time \newline
+        \item Soft real time
     \end{itemize}
 \end{frame}
 
@@ -385,6 +482,9 @@
 \subsection*{}
 \begin{frame}
     \frametitle{Upravljane memorijom}
+    \begin{center}
+        Kako se kontroliše upotrebna RAM-a?
+    \end{center}
 \end{frame}
 
 \section*{Upravljanje memorijom}
@@ -456,8 +556,8 @@
 \begin{frame}
     \frametitle{Fragmentacija}
     \begin{itemize}
-        \item interna fragmentacija \newline
-        \item eksterna fragmentacija
+        \item Interna fragmentacija \newline
+        \item Eksterna fragmentacija
     \end{itemize}
 \end{frame}
 
@@ -495,15 +595,81 @@
     \frametitle{Fajl}
     \begin{itemize}
         \item Informacije sačuvane u trajnoj memoriji \newline
-        \item Prava pristupa (čitanje, pisanje, izvrpavanje)
+        \item Meta podaci (prava pristupa, modifikacija, vreme pravljenja, korisnik,...)
     \end{itemize}
 \end{frame}
 
 \begin{frame}
+    \frametitle{Fajl sistemi}
+    \begin{center}
+        Šta je fajl sistem?
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fajl sistemi}
+    \begin{center}
+        Kako pronalazimo fajlove na disku?
+    \end{center}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fajl sistemi}
+    \begin{itemize}
+        \item FAT32 \newline
+        \item NTFS \newline   
+        \item EXT4 \newline
+        \item APFS
+    \end{itemize}
+\end{frame}
+
+\section*{Fajl sistemi}
+
+\begin{frame}
+    \frametitle{FAT32}
+    \begin{itemize}
+        \item \textit{File Allocation Table} \newline
+        \item File Allocation Table odvojena od podataka \newline
+        \item 4GB - 1B \newline
+        \item Particije do 2TB (sektori 512KB)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{NTFS}
+    \begin{itemize}
+        \item \textit{New Technology File System} \newline
+        \item Ne zavisi od veličine sektora \newline
+        \item Alocira više kontinualnih sektora (2n) - volume \newline
+        \item Ograničenje na veličinu fajla je mnogo veće \newline
+        \item Master File Table sadrži podatke o volume-ima
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
     \frametitle{Fajl}
     \begin{itemize}
-        \item Različiti tipovi fajlova (obični, direktorijumi, specijalni) \newline
+        \item Različiti tipovi fajlova \begin{itemize}
+            \item obični \newline
+            \item direktorijum \newline
+            \item specijalni \newline
+        \end{itemize}
         \item Imaju različite strukture \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Direktorijum}
+    \begin{itemize}
+        \item Sadrži više fajlova \newline
+        \item Operacije \begin{itemize}
+            \item Kreiranje fajlova \newline
+            \item Brisanje fajlova \newline
+            \item Pretraga fajlova \newline
+            \item Izlistavanje fajlova
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -515,6 +681,32 @@
         \item Preko indeksa
     \end{itemize}
 \end{frame}
+
+\subsection*{Pristup fajlu}
+\begin{frame}
+    \frametitle{Sekvencijalno}
+    \begin{center}
+        \includegraphics[width=10cm]{img/sequential_file_access.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Direknot/nasumično}
+    \begin{center}
+        \includegraphics[width=10cm]{img/dirrect_access.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Preko indeksa}
+    \begin{itemize}
+        \item Indeksni fajl (logički ključevi na fizičke adrese) \newline
+        \item Brzina i efikasnost
+    \end{itemize}
+\end{frame}
+
+
+\subsection*{}
 
 \begin{frame}
     \frametitle{Alokacija memorije za fajl}
@@ -532,37 +724,71 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Direktorijum}
-    \begin{itemize}
-        \item Sadrži više fajlova \newline
-        \item Kreiranje fajlova \newline
-        \item Brisanje fajlova \newline
-        \item Pretraga fajlova \newline
-        \item Izlistavanje fajlova
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Direktorijum}
+    \frametitle{Razvoj strukture direktorijuma}
     \begin{itemize}
         \item Jedan nivo \newline
         \item Dva nivoa (korisnik/direktorijum/fajl) \newline
         \item Stablo \newline
-        \item Graf
+        \item Acikličan graf
     \end{itemize}
 \end{frame}
 
-\section*{}
+\subsection*{Razvoj strukture direktorijuma}
+\begin{frame}
+    \frametitle{Jedan nivo}
+    \begin{itemize}
+        \item Višekorisnički operativni sistem \newline
+        \item Svaki korisnik ima svoj dikretorijum 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Dva nivoa}
+    \begin{itemize}
+        \item Kao za jedan nivo ali korisnik može da pravi direktorijume u tom nivou
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Stablo}
+    \begin{itemize}
+        \item Nema ograničenja na dubinu \newline
+        \item Ne postoje linkovi
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Acikličan graf}
+    \begin{itemize}
+        \item Uvode se i linkovi
+    \end{itemize}
+
+\end{frame}
+
 \subsection*{}
+
+\begin{frame}
+    \frametitle{Operacije nad sistemom fajlova}
+    \begin{itemize}
+        \item Dodavanje fajlova \newline
+        \item Brisanje fajlova \newline
+        \item Premeštanje fajlova
+    \end{itemize}
+\end{frame}
+
+\subsection*{}
+\section*{}
 
 \begin{frame}
     \frametitle{Dokle smo stigli?}
     \begin{itemize}
+        \item Pojam \newline
         \item Učitavanje operativnog sistema \newline
         \item Procesi \newline
         \item Planeri procesa \newline
-        \item Upravljanje memorijom \newline
-        \item Fajl sistem
+        \item Zaštita memorije \newline
+        \item Fajl sistemi
     \end{itemize}
 \end{frame}
 
@@ -584,7 +810,5 @@
         \Huge Pitanja?    
     \end{center}
 \end{frame}
-
-
 
 \end{document}
