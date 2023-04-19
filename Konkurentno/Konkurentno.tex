@@ -12,11 +12,10 @@
 \usetheme[]{Antibes}
 
 \title{Konkurentno programiranje}
-%\subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
 \author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
 \institute{Istraživačka stanica Petnica}
 \titlegraphic{\includegraphics[width=2cm]{img/Petnica.png}}
-\date{25.04.2023.}
+\date{21.04.2023.}
 
 
 \lstset{language=C,keywordstyle={\bfseries \color{blue}}}
@@ -48,7 +47,6 @@
         \item Podsećanje \newline
         \item Niti \newline
         \item Problemi i rešenja \newline
-        \item 
     \end{itemize}
 \end{frame}
 
@@ -112,8 +110,9 @@
     \begin{itemize}
         \item Komunikacija je brža nego između procesa \newline
         \item Zahtevaju manje resursa \newline
-        \item Brže se prave (ne zahtevaju memory map, a ni sve resurse)
-        \item Context switching je brži
+        \item Brže se prave (ne zahtevaju memory map, a ni sve resurse) \newline
+        \item Context switching je brži \newline
+        \item Kada se blokira neka nit, sve niti nastale od nje bivaju blokirane
     \end{itemize}
 \end{frame}
 
@@ -133,7 +132,6 @@
     \begin{itemize}
         \item Single-threaded \newline
         \item Multithreading \newline
-        \item Kada se blokira neka nit, sve niti nastale od nje bivaju blokirane
     \end{itemize}
 \end{frame}
 
@@ -148,11 +146,20 @@
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
     \frametitle{Pravljenje niti}
-
+    \begin{lstlisting}[language=Java]
+class Testing extends Thread{  
+    public void run(){  
+    System.out.println("In thread");  
+    }  
     
-
+    public static void main(String args[]){  
+        Testing t1 = new Testing();  
+        t1.start();  
+    }  
+}       
+    \end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -169,25 +176,13 @@
     \end{center}
 \end{frame}
 
+\subsection*{Problemi}
 \begin{frame}
-    \frametitle{Pristup memoriji}
+    \frametitle{Race condition}
     \begin{itemize}
         \item Imamo dva procesa i pokušavaju da otvore jedan fajl \newline
         \item Imamo dve niti i pokušavaju da pristupe jednoj javnoj varijabli
     \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Problemi}
-    \begin{itemize}
-        \item Da li sledeći kod može da radi?
-        % Kod koji pravi dve niti i bez provere cita i uvecava variablu
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Da li sledeći kod može da radi?}
-    % dodavanje "lock" zastavice i provera da li je zaključano
 \end{frame}
 
 \begin{frame}
@@ -202,77 +197,90 @@
     \begin{itemize}
         \item Omogućava da ne može više procesa istovremeno da koristi neki resurs \newline
         \item Operacije: \begin{itemize}
-            \item Čekaj
-            \item Signal
+            \item Čekaj (P)
+            \item Signal (V)
         \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
     \frametitle{Semafor}
-    %Opis sta su
-\end{frame}
+    \begin{lstlisting}[language=Java]
+P(Semaphore s){
+    while (s == 0);
+    s = s - 1;
+}
+V(Semaphore s){
+    while(s > 5);
+    s=s+1
+}    
+        
+    \end{lstlisting}
 
-\begin{frame}
-    \frametitle{Semafor}
-    % Primer koda    
-
-\end{frame}
-
-\begin{frame}
-    \frametitle{Mutex}
-    % Opis sta su
-\end{frame}
-
-\begin{frame}
-    \frametitle{Mutex}
-    %Primer koda
-\end{frame}
-
-\begin{frame}
-    \frametitle{Hardverska pomoć}
-    %nesto
-\end{frame}
-
-\begin{frame}
-    \frametitle{Monitori}
-    %opis sta su
-
-\end{frame}
-
-\begin{frame}
-    \frametitle{Problem 5 filozofa - podsećanje}
-
-\end{frame}
-
-
-
-\begin{frame}
-    \frametitle{Five philosopher problem}
     \begin{itemize}
-        \item Pet filozofa sedi za okruglim stolom i na smenu rezmišljaju i jedu. 
-        Svaki ima ispred sebe tanjir sa špagetama i između svaka dva tanjira se nalazi viljuška.
-         Da bi mogao da jede, filozofu trebaju dve viljuške. \newline
-        \item Zastoj (deadlock)
+        \item Busy waiting
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Five philosopher problem}
-    \begin{center}
-        \large{Demonstracija i rešenje}
-    \end{center}
+    \frametitle{Mutex}
+    \begin{itemize}
+        \item Isto kao i semafori, ali nemaju brojač, nego true/false
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hardverska pomoć}
+    \begin{itemize}
+        \item Može postojati instrukcija koja nije deljiva \newline
+        \item Ne može se izvršavati paralelno na više procesora \newline
+        \item \textit{TestAndSet}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Monitori}
+    \begin{itemize}
+        \item Pomoć programskih jezika \newline
+        \item Skup procedura "spakovanih" u jedan paket \newline
+    \end{itemize}
+
 \end{frame}
 
 \begin{frame}
     \frametitle{Problem proizvođača i potrošača}
-    
+    \begin{center}
+        Imamo jednog proizvođača i jednog potrošača. Proizvođač proizvodi čokolade, a potrošač ih jede. Proizvođač puni korpu čokoladama dok se ne napuni, nakon toga spava i čeka da se napravi mesta. Potrošač jede čokolade dok ne isprazni korpu i kada se isprazni odlazi da spava dok se korpa ne napuni.
+    \end{center}
 
 \end{frame}
 
+\begin{frame}
+    \frametitle{The dining philosophers problem}
+    \begin{center}
+        \item Pet filozofa sedi za okruglim stolom. Ispred svakog se nalazi jedan tanjih špageta. Između svaka dva tanjira postoji jedna viljuška. Filozofi na smenu jedu i razmišljaju, ali da bi jeli treba ju im \textbf{dve} viljuške. Kada ogladni, filozof proveri da li može da uzme dve viljuške i ukoliko može, jede. Ukoliko nema dve viljuške, sačekaće da se oslobode.
+    \end{center}
+\end{frame}
 
 \begin{frame}
     \frametitle{Problem uspavanog berberina}
+    \begin{center}
+        U frizerskom salonu radi jedan berberin. Čekaonica ima \textit{n} stolica, ali postoji samo jedna stolica za šišanje. Ukoliko nema mušterija, berber spava. Kada mušterija dođe, ukoliko berber spava mora ga probuditi. Ukoliko nema slobodnih stolica, mušterija odlazi, ukoliko je stolica za šišanje slobodna, sešće u nju. Kada berber završi šišanje, proverava da li je čekaonica prazna i ukoliko jeste, odlazi da spava.
+    \end{center}
+\end{frame}
+
+\section*{}
+\subsection*{}
+\begin{frame}
+    \frametitle{Podsećanje}
+    \begin{itemize}
+        \item Šta su niti? \newline
+        \item U čemu se razlikuju od procesa? \newline
+        \item Šta je semafor? \newline
+        \item Šta je mutex? \newline
+        \item Šta je race condition? \newline
+        \item Šta je deadlock?
+    \end{itemize}
 
     
 
