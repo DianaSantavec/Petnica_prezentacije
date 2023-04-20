@@ -248,18 +248,20 @@ V(Semaphore s){
 \end{frame}
 
 \begin{frame}
-    \frametitle{Problem proizvođača i potrošača}
-    \begin{center}
-        Imamo jednog proizvođača i jednog potrošača. Proizvođač proizvodi čokolade, a potrošač ih jede. Proizvođač puni korpu čokoladama dok se ne napuni, nakon toga spava i čeka da se napravi mesta. Potrošač jede čokolade dok ne isprazni korpu i kada se isprazni odlazi da spava dok se korpa ne napuni.
-    \end{center}
-
-\end{frame}
-
-\begin{frame}
     \frametitle{The dining philosophers problem}
     \begin{center}
         \item Pet filozofa sedi za okruglim stolom. Ispred svakog se nalazi jedan tanjih špageta. Između svaka dva tanjira postoji jedna viljuška. Filozofi na smenu jedu i razmišljaju, ali da bi jeli treba ju im \textbf{dve} viljuške. Kada ogladni, filozof proveri da li može da uzme dve viljuške i ukoliko može, jede. Ukoliko nema dve viljuške, sačekaće da se oslobode.
     \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem čitaoca i pisaca}
+    \begin{itemize}
+        \item Imamo bazu podataka i procese koji hoće da pišu u nju i da čitaju iz nje. \newline
+        \item Da li je problem da svi čitaju? \newline
+        \item Da li je problem da istovremeno čitaju i pišu? \newline
+        \item Da li je problem da istovremeno pišu?
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -269,6 +271,14 @@ V(Semaphore s){
     \end{center}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Problem proizvođača i potrošača}
+    \begin{center}
+        Imamo jednog proizvođača i jednog potrošača. Proizvođač proizvodi čokolade, a potrošač ih jede. Proizvođač puni korpu čokoladama dok se ne napuni, nakon toga spava i čeka da se napravi mesta. Potrošač jede čokolade dok ne isprazni korpu i kada se isprazni odlazi da spava dok se korpa ne napuni.
+    \end{center}
+
+\end{frame}
+
 \section*{}
 \subsection*{}
 \begin{frame}
@@ -276,6 +286,13 @@ V(Semaphore s){
     \begin{itemize}
         \item Šta su niti? \newline
         \item U čemu se razlikuju od procesa? \newline
+        \item Kako se razlikuje Komunikacija niti i procesa? \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Podsećanje}
+    \begin{itemize}
         \item Šta je semafor? \newline
         \item Šta je mutex? \newline
         \item Šta je race condition? \newline
