@@ -1,0 +1,313 @@
+\documentclass{beamer}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\usepackage{wasysym}
+
+
+
+\usetheme[]{Antibes}
+
+\title{Konkurentno programiranje}
+\author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
+\institute{Istraživačka stanica Petnica}
+\titlegraphic{\includegraphics[width=2cm]{img/Petnica.png}}
+\date{21.04.2023.}
+
+
+\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{Sadržaj}
+    \begin{itemize}
+        \item Podsećanje \newline
+        \item Niti \newline
+        \item Problemi i rešenja \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Podsećanje}
+    \begin{itemize}
+        \item Šta je proces? \newline
+        \item Šta su niti? \newline 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Niti}
+    \begin{itemize}
+        \item Zašto su niti bitne?
+    \end{itemize}
+\end{frame}
+
+\section*{Niti}
+\begin{frame}
+    \frametitle{Pojam}
+    \begin{itemize}
+        \item \textit{lightweight process} \newline
+        \item Nezavisni tokovi \newline
+        \item Isti adresni prostor \newline
+        \item Planer procesa ima kontrolu
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Memorija}
+    \begin{itemize}
+        \item Dele u okviru procesa: \begin{itemize}
+            \item Data segment \newline
+            \item Code segment \newline
+            \item Fajlovi \newline
+        \end{itemize}
+        \item Imaju nezavisno: \begin{itemize}
+            \item Stek (Instruction pointer i registri)\newline
+        \end{itemize}
+    \end{itemize}   
+    %Text segment (instructions)
+    %Data segment (static and global data)
+    %BSS segment (uninitialized data)
+    %Open file descriptors
+    %Signals
+    %Current working directory
+    %User and group IDs
+\end{frame}
+
+\begin{frame}
+    \frametitle{Memorija}
+    \begin{center}
+        \includegraphics[width=12cm]{img/process_vs_thread}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Memorija}
+    \begin{itemize}
+        \item Komunikacija je brža nego između procesa \newline
+        \item Zahtevaju manje resursa \newline
+        \item Brže se prave (ne zahtevaju memory map, a ni sve resurse) \newline
+        \item Context switching je brži \newline
+        \item Kada se blokira neka nit, sve niti nastale od nje bivaju blokirane
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Podaci koje čuva OS}
+    \begin{itemize}
+        \item Thread ID \newline
+        \item Saved registers, stack pointer, instruction pointer \newline
+        \item Stack (local variables, temporary variables, return addresses) \newline
+        \item Signal mask \newline
+        \item Priority (scheduling information)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tipovi}
+    \begin{itemize}
+        \item Single-threaded \newline
+        \item Multithreading \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Tipovi}
+    \begin{itemize}
+        \item User level thread \newline
+        \item Kernel-level thread
+    \end{itemize}
+
+    
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pravljenje niti}
+    \begin{lstlisting}[language=Java]
+class Testing extends Thread{  
+    public void run(){  
+    System.out.println("In thread");  
+    }  
+    
+    public static void main(String args[]){  
+        Testing t1 = new Testing();  
+        t1.start();  
+    }  
+}       
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problemi}
+    \begin{center}
+        Kakvi problemi mogu nastati sa multithreading procesima?
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problemi}
+    \begin{center}
+        Šta je deadlock?
+    \end{center}
+\end{frame}
+
+\subsection*{Problemi}
+\begin{frame}
+    \frametitle{Race condition}
+    \begin{itemize}
+        \item Imamo dva procesa i pokušavaju da otvore jedan fajl \newline
+        \item Imamo dve niti i pokušavaju da pristupe jednoj javnoj varijabli
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    \begin{center}
+        \includegraphics[width=5cm]{img/semaphore_trafic.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Semafor}
+    \begin{itemize}
+        \item Omogućava da ne može više procesa istovremeno da koristi neki resurs \newline
+        \item Operacije: \begin{itemize}
+            \item Čekaj (P)
+            \item Signal (V)
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Semafor}
+    \begin{lstlisting}[language=Java]
+P(Semaphore s){
+    while (s == 0);
+    s = s - 1;
+}
+V(Semaphore s){
+    while(s > 5);
+    s=s+1
+}    
+        
+    \end{lstlisting}
+
+    \begin{itemize}
+        \item Busy waiting
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mutex}
+    \begin{itemize}
+        \item Isto kao i semafori, ali nemaju brojač, nego true/false
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hardverska pomoć}
+    \begin{itemize}
+        \item Može postojati instrukcija koja nije deljiva \newline
+        \item Ne može se izvršavati paralelno na više procesora \newline
+        \item \textit{TestAndSet}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Monitori}
+    \begin{itemize}
+        \item Pomoć programskih jezika \newline
+        \item Skup procedura "spakovanih" u jedan paket \newline
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{The dining philosophers problem}
+    \begin{center}
+        \item Pet filozofa sedi za okruglim stolom. Ispred svakog se nalazi jedan tanjih špageta. Između svaka dva tanjira postoji jedna viljuška. Filozofi na smenu jedu i razmišljaju, ali da bi jeli treba ju im \textbf{dve} viljuške. Kada ogladni, filozof proveri da li može da uzme dve viljuške i ukoliko može, jede. Ukoliko nema dve viljuške, sačekaće da se oslobode.
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem čitaoca i pisaca}
+    \begin{itemize}
+        \item Imamo bazu podataka i procese koji hoće da pišu u nju i da čitaju iz nje. \newline
+        \item Da li je problem da svi čitaju? \newline
+        \item Da li je problem da istovremeno čitaju i pišu? \newline
+        \item Da li je problem da istovremeno pišu?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem uspavanog berberina}
+    \begin{center}
+        U frizerskom salonu radi jedan berberin. Čekaonica ima \textit{n} stolica, ali postoji samo jedna stolica za šišanje. Ukoliko nema mušterija, berber spava. Kada mušterija dođe, ukoliko berber spava mora ga probuditi. Ukoliko nema slobodnih stolica, mušterija odlazi, ukoliko je stolica za šišanje slobodna, sešće u nju. Kada berber završi šišanje, proverava da li je čekaonica prazna i ukoliko jeste, odlazi da spava.
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Problem proizvođača i potrošača}
+    \begin{center}
+        Imamo jednog proizvođača i jednog potrošača. Proizvođač proizvodi čokolade, a potrošač ih jede. Proizvođač puni korpu čokoladama dok se ne napuni, nakon toga spava i čeka da se napravi mesta. Potrošač jede čokolade dok ne isprazni korpu i kada se isprazni odlazi da spava dok se korpa ne napuni.
+    \end{center}
+
+\end{frame}
+
+\section*{}
+\subsection*{}
+\begin{frame}
+    \frametitle{Podsećanje}
+    \begin{itemize}
+        \item Šta su niti? \newline
+        \item U čemu se razlikuju od procesa? \newline
+        \item Kako se razlikuje Komunikacija niti i procesa? \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Podsećanje}
+    \begin{itemize}
+        \item Šta je semafor? \newline
+        \item Šta je mutex? \newline
+        \item Šta je race condition? \newline
+        \item Šta je deadlock?
+    \end{itemize}
+
+    
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{HVALA NA PAŽNJI!}
+    \begin{center}
+        \Huge Pitanja?    
+    \end{center}
+\end{frame}
+
+\end{document}
