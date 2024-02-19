@@ -4,12 +4,16 @@
 
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
+\usepackage{tikz}
+
 
 \usepackage{wasysym}
 
 
 
 \usetheme[]{Antibes}
+
+\usetikzlibrary{automata, positioning, arrows}
 
 \title{Operativni sistemi}
 %\subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
@@ -39,6 +43,27 @@
 }
 
 \begin{document}
+
+% Define styles for the states
+\tikzset{
+  state/.style={
+    circle,
+    draw,
+    minimum size=1cm
+  },
+  highlighted/.style={
+    circle,
+    draw,
+    fill=red!50,
+    minimum size=1cm,
+    font=\bfseries
+  }
+}
+
+\tikzstyle{process} = [rectangle, draw, text width=1cm, text centered, minimum height=1cm]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\tikzstyle{highlight} = [fill=red!30]
+\tikzstyle{time label} = [below, align=center]
 
 \frame{\titlepage}
 
@@ -323,16 +348,42 @@
 \begin{frame}
     \frametitle{Proces u memoriji}
     \begin{center}
-        \includegraphics[width=4cm]{img/process_in_memory.png}
+        %\includegraphics[width=4cm]{img/process_in_memory.png}
     \end{center}
-\end{frame}
+\end{frame}  
 
 \begin{frame}
-    \frametitle{Životni ciklus procesa}
-    \begin{center}
-        \includegraphics[width=11cm]{img/process_states.png}
-    \end{center}
-\end{frame}
+    \frametitle{Promena stanja procesa}
+    
+    \begin{tikzpicture}[->, >=stealth', auto, node distance=3cm, thick]
+        % Define nodes
+        \node[state] (start) {START};
+        \node[state, right of=start] (ready) {READY};
+        \node[state, right of=ready] (run) {RUN};
+        \node[state, right of=run] (stop) {STOP};
+        \node[state, below of=ready] (wait) {WAIT};
+      
+        % Connect nodes with arrows
+        \draw (start) -- (ready);
+        \draw (ready) -- (run);
+        \draw (run) -- (ready);
+        \draw (run) -- (stop);
+        \draw (wait) -- (ready);
+        \draw (run) -- (wait);
+      
+        % Animate the process state changes
+        \only<2>{\node[highlighted] at (start) {START};}
+        \only<3>{\node[highlighted] at (ready) {READY};}
+        \only<4>{\node[highlighted] at (run) {RUN};}
+        \only<5>{\node[highlighted] at (ready) {READY};}
+        \only<6>{\node[highlighted] at (run) {RUN};}
+        \only<7>{\node[highlighted] at (wait) {WAIT};}
+        \only<8>{\node[highlighted] at (ready) {READY};}
+        \only<9>{\node[highlighted] at (run) {RUN};}
+        \only<10>{\node[highlighted] at (stop) {STOP};}
+      \end{tikzpicture}
+    
+    \end{frame}
 
 \begin{frame}
     \frametitle{Fork}
@@ -373,29 +424,111 @@
 \begin{frame}
     \frametitle{Sekvencijalno}
     \begin{center}
-        \includegraphics[width=11cm]{img/sekvencijalno.png}
+        %\includegraphics[width=11cm]{img/sekvencijalno.png}
     \end{center}
 \end{frame}
 
 \begin{frame}
     \frametitle{Time sharing}
     \begin{center}
-        \includegraphics[width=11cm]{img/time_sharing.png}
+        %\includegraphics[width=11cm]{img/time_sharing.png}
     \end{center}
 \end{frame}
 
+
+%\begin{frame}
+%    \frametitle{Paralelno}
+%    \begin{center}
+%        \includegraphics[width=9cm]{img/paralelno.png}
+%    \end{center}
+%\end{frame}
+% Slide for time 1
 \begin{frame}
-    \frametitle{Paralelno}
-    \begin{center}
-        \includegraphics[width=9cm]{img/paralelno.png}
-    \end{center}
-\end{frame}
+    \frametitle{Parallel Execution at Time 1}
+    \begin{tikzpicture}[node distance=1cm]
+      % Nodes for Process 1
+      \node[process, highlight] (p1t1) {1};
+      \node[process, right=of p1t1] (p1t2) {1};
+      \node[process, right=of p1t2] (p1t3) {1};
+    
+      % Nodes for Process 2
+      \node[process, highlight, below=of p1t1] (p2t1) {2};
+      \node[process, right=of p2t1] (p2t2) {2};
+      \node[process, right=of p2t2] (p2t3) {2};
+    
+      % Arrows
+      \draw[arrow] (p1t1) -- (p1t2);
+      \draw[arrow] (p1t2) -- (p1t3);
+      \draw[arrow] (p2t1) -- (p2t2);
+      \draw[arrow] (p2t2) -- (p2t3);
+    
+      % Dashed lines and time labels
+      \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
+      \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
+      \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
+    \end{tikzpicture}
+    \end{frame}
+    
+    % Slide for time 2
+    \begin{frame}
+    \frametitle{Parallel Execution at Time 2}
+    \begin{tikzpicture}[node distance=1cm]
+      % Nodes for Process 1
+      \node[process] (p1t1) {1};
+      \node[process, highlight, right=of p1t1] (p1t2) {1};
+      \node[process, right=of p1t2] (p1t3) {1};
+    
+      % Nodes for Process 2
+      \node[process, below=of p1t1] (p2t1) {2};
+      \node[process, highlight, right=of p2t1] (p2t2) {2};
+      \node[process, right=of p2t2] (p2t3) {2};
+    
+    % Arrows
+    \draw[arrow] (p1t1) -- (p1t2);
+    \draw[arrow] (p1t2) -- (p1t3);
+    \draw[arrow] (p2t1) -- (p2t2);
+    \draw[arrow] (p2t2) -- (p2t3);
+    
+    % Dashed lines and time labels
+    \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
+    \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
+    \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
+    \end{tikzpicture}
+    \end{frame}
+    
+    % Slide for time 3
+    \begin{frame}
+    \frametitle{Parallel Execution at Time 3}
+    \begin{tikzpicture}[node distance=1cm]
+    % Nodes for Process 1
+    \node[process] (p1t1) {1};
+    \node[process, right=of p1t1] (p1t2) {1};
+    \node[process, highlight, right=of p1t2] (p1t3) {1};
+    
+    % Nodes for Process 2
+    \node[process, below=of p1t1] (p2t1) {2};
+    \node[process, right=of p2t1] (p2t2) {2};
+    \node[process, highlight, right=of p2t2] (p2t3) {2};
+    
+    % Arrows
+    \draw[arrow] (p1t1) -- (p1t2);
+    \draw[arrow] (p1t2) -- (p1t3);
+    \draw[arrow] (p2t1) -- (p2t2);
+    \draw[arrow] (p2t2) -- (p2t3);
+    
+    % Dashed lines and time labels
+    \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
+    \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
+    \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
+    \end{tikzpicture}
+    \end{frame}
+    
 
 \begin{frame}
     \frametitle{Zastoj}
 
     \begin{center}
-        \includegraphics[width=10cm]{img/deadlock.png}
+        %\includegraphics[width=10cm]{img/deadlock.png}
     \end{center}
 \end{frame}
 
@@ -686,14 +819,14 @@
 \begin{frame}
     \frametitle{Sekvencijalno}
     \begin{center}
-        \includegraphics[width=10cm]{img/sequential_file_access.png}
+        %\includegraphics[width=10cm]{img/sequential_file_access.png}
     \end{center}
 \end{frame}
 
 \begin{frame}
     \frametitle{Direknot/nasumično}
     \begin{center}
-        \includegraphics[width=10cm]{img/dirrect_access.png}
+        %\includegraphics[width=10cm]{img/dirrect_access.png}
     \end{center}
 \end{frame}
 
