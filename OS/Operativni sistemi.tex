@@ -7,6 +7,7 @@
 \usepackage{tikz}
 
 
+
 \usepackage{wasysym}
 
 
@@ -14,6 +15,7 @@
 \usetheme[]{Antibes}
 
 \usetikzlibrary{automata, positioning, arrows}
+\usetikzlibrary{arrows.meta, chains, positioning, quotes}
 
 \title{Operativni sistemi}
 %\subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
@@ -81,9 +83,24 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Ali prvo\dots}
+    \centering
+    \LARGE{Čemu pokazivanje na starijoj opremi?}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Čemu pokazivanje na starijoj opremi?}
+    \begin{itemize}
+        \item Jednostavnija je \newline
+        \item Neke stvari su vidljive (sada su softverske) \newline
+        \item Razlog su nekih "nelogicnosti" jer se održava kompatibilnost
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \frametitle{Uvod}
     \begin{center}
-        \large{Šta je operativni sistem?}
+        \LARGE{Šta je operativni sistem?}
     \end{center}
 \end{frame}
 
@@ -112,7 +129,7 @@
 \begin{frame}
     \frametitle{Učitavanje operativnog sistema}
     \begin{center}
-        \large{Šta se desi kada pritisnemo dugme?}
+        \LARGE{Šta se desi kada pritisnemo dugme?}
     \end{center}
 \end{frame}
 
@@ -140,7 +157,7 @@
     \begin{itemize}
         \item Logička sekcija diska sačinjena od kontinualnih sektora \newline
         \item Partition table \begin{itemize}
-            \item Broj particija \newline
+            \item Boot indicator it flag \newline
             \item Početak particije \newline
             \item Atributi particije \newline
         \end{itemize}
@@ -151,7 +168,7 @@
 \begin{frame}
     \frametitle{BIOS-MBR}
     \begin{center}
-        \large{Kako zapravo radi?}
+        \LARGE{Kako zapravo radi?}
     \end{center}
 \end{frame}
 
@@ -170,7 +187,8 @@
     \frametitle{BIOS}
     \begin{itemize}
         \item Real mode \newline
-        \item 16bit asembler
+        \item 16bit asembler \newline
+        \item Operativni sistem menja u 32 ili 64bit zaštićen režim
     \end{itemize}
 \end{frame}
 
@@ -198,8 +216,9 @@
         \item Svaki hard disk ga sadrži \newline
         \item Postoje dve strukture: \begin{itemize}
             \item Classic \newline
-            \item Modern 
+            \item Modern \newline
         \end{itemize}
+        \item \textit{Prikaz diska i floppy ploče}
     \end{itemize}
 \end{frame}
 
@@ -241,7 +260,6 @@
         jmp $ 
         times 510 - ( $ - $$ ) db 0
         dw 0xaa55
-
     \end{lstlisting}
 \end{frame}
 
@@ -260,7 +278,7 @@
 \begin{frame}
     \frametitle{UEFI-GPT}
     \begin{center}
-        Zašto onda imamo UEFI-GPT?
+        \LARGE{Zašto onda imamo UEFI-GPT?}
     \end{center}
 \end{frame}
 
@@ -276,6 +294,15 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{UEFI}
+    \begin{itemize}
+        \item Safe boot \newline
+        \item Binarni potpis softvera za butovanje \newline
+        \item Emulacija ranijih BIOS firmware-a
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \frametitle{GPT}
     \begin{itemize}
         \item Najviše 128 particija \newline
@@ -283,15 +310,6 @@
         \item Više kopija GUID tabela particija \begin{itemize}
             \item Mogu se čuavati na početku i kraju
         \end{itemize}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{UEFI}
-    \begin{itemize}
-        \item Safe boot \newline
-        \item Binarni potpis softvera za butovanje \newline
-        \item Emulacija ranijih BIOS firmware-a
     \end{itemize}
 \end{frame}
 
@@ -329,7 +347,7 @@
 \begin{frame}
     \frametitle{Procesi}
     \begin{center}
-        \large{Šta je proces?}
+        \LARGE{Šta je proces?}
     \end{center}
 \end{frame}
 
@@ -348,7 +366,7 @@
 \begin{frame}
     \frametitle{Proces u memoriji}
     \begin{center}
-        %\includegraphics[width=4cm]{img/process_in_memory.png}
+        \includegraphics[width=10cm]{img/process_in_memory.png}
     \end{center}
 \end{frame}  
 
@@ -424,25 +442,75 @@
 \begin{frame}
     \frametitle{Sekvencijalno}
     \begin{center}
-        %\includegraphics[width=11cm]{img/sekvencijalno.png}
+        \tikzstyle{process} = [draw, rectangle, minimum width=1cm, minimum height=1cm, align=center]
+    \tikzstyle{highlighted} = [draw, rectangle, fill=red!50, minimum width=1cm, minimum height=1cm, align=center]
+
+    \begin{tikzpicture}[auto, >=stealth', thick, scale=0.8, transform shape]
+        % Create the nodes for the processes
+        \node[process] (1) {1};
+        \node[process, right=of 1] (2) {1};
+        \node[process, right=of 2] (3) {1};
+        \node[process, right=of 3] (4) {1};
+        \node[process, right=of 4] (5) {2};
+        \node[process, right=of 5] (6) {2};
+        \node[process, right=of 6] (7) {2};
+
+        % Draw the arrows between the processes
+        \draw[->] (1) -- (2);
+        \draw[->] (2) -- (3);
+        \draw[->] (3) -- (4);
+        \draw[->] (4) -- (5);
+        \draw[->] (5) -- (6);
+        \draw[->] (6) -- (7);
+
+        % Highlight nodes with animations
+        \only<1>{\node[highlighted] at (1) {1};}
+        \only<2>{\node[highlighted] at (2) {1};}
+        \only<3>{\node[highlighted] at (3) {1};}
+        \only<4>{\node[highlighted] at (4) {1};}
+        \only<5>{\node[highlighted] at (5) {2};}
+        \only<6>{\node[highlighted] at (6) {2};}
+        \only<7>{\node[highlighted] at (7) {2};}
+    \end{tikzpicture}
     \end{center}
 \end{frame}
 
 \begin{frame}
     \frametitle{Time sharing}
-    \begin{center}
-        %\includegraphics[width=11cm]{img/time_sharing.png}
-    \end{center}
+    \tikzstyle{process} = [draw, rectangle, minimum width=1cm, minimum height=1cm, align=center]
+    \tikzstyle{highlighted} = [draw, rectangle, fill=red!50, minimum width=1cm, minimum height=1cm, align=center]
+
+    \begin{tikzpicture}[auto, >=stealth', thick, scale=0.8, transform shape]
+        % Create the nodes for the processes
+        \node[process] (1) {1};
+        \node[process, right=of 1] (2) {1};
+        \node[process, right=of 2] (3) {1};
+        \node[process, right=of 3] (4) {1};
+        \node[process, right=of 4] (5) {2};
+        \node[process, right=of 5] (6) {2};
+        \node[process, right=of 6] (7) {2};
+
+        % Draw the arrows between the processes
+        \draw[->] (1) -- (2);
+        \draw[->] (2) -- (3);
+        \draw[->] (3) -- (4);
+        \draw[->] (4) -- (5);
+        \draw[->] (5) -- (6);
+        \draw[->] (6) -- (7);
+
+        % Highlight nodes with animations
+        \only<1>{\node[highlighted] at (1) {1};}
+        \only<2>{\node[highlighted] at (2) {1};}
+        \only<3>{\node[highlighted] at (3) {1};}
+        \only<4>{\node[highlighted] at (4) {1};}
+        \only<5>{\node[highlighted] at (5) {2};}
+        \only<6>{\node[highlighted] at (6) {2};}
+        \only<7>{\node[highlighted] at (7) {2};}
+    \end{tikzpicture}
 \end{frame}
 
 
-%\begin{frame}
-%    \frametitle{Paralelno}
-%    \begin{center}
-%        \includegraphics[width=9cm]{img/paralelno.png}
-%    \end{center}
-%\end{frame}
-% Slide for time 1
+% Paralelno izvršavanje procesa - inicijalni slajd
 \begin{frame}
     \frametitle{Parallel Execution at Time 1}
     \begin{tikzpicture}[node distance=1cm]
@@ -450,6 +518,7 @@
       \node[process, highlight] (p1t1) {1};
       \node[process, right=of p1t1] (p1t2) {1};
       \node[process, right=of p1t2] (p1t3) {1};
+      \node[process, right=of p1t3] (p1t4) {1};
     
       % Nodes for Process 2
       \node[process, highlight, below=of p1t1] (p2t1) {2};
@@ -459,6 +528,7 @@
       % Arrows
       \draw[arrow] (p1t1) -- (p1t2);
       \draw[arrow] (p1t2) -- (p1t3);
+      \draw[arrow] (p1t3) -- (p1t4);
       \draw[arrow] (p2t1) -- (p2t2);
       \draw[arrow] (p2t2) -- (p2t3);
     
@@ -467,68 +537,116 @@
       \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
       \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
     \end{tikzpicture}
-    \end{frame}
+\end{frame}
     
-    % Slide for time 2
-    \begin{frame}
-    \frametitle{Parallel Execution at Time 2}
-    \begin{tikzpicture}[node distance=1cm]
-      % Nodes for Process 1
-      \node[process] (p1t1) {1};
-      \node[process, highlight, right=of p1t1] (p1t2) {1};
-      \node[process, right=of p1t2] (p1t3) {1};
-    
-      % Nodes for Process 2
-      \node[process, below=of p1t1] (p2t1) {2};
-      \node[process, highlight, right=of p2t1] (p2t2) {2};
-      \node[process, right=of p2t2] (p2t3) {2};
-    
-    % Arrows
-    \draw[arrow] (p1t1) -- (p1t2);
-    \draw[arrow] (p1t2) -- (p1t3);
-    \draw[arrow] (p2t1) -- (p2t2);
-    \draw[arrow] (p2t2) -- (p2t3);
-    
-    % Dashed lines and time labels
-    \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
-    \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
-    \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
-    \end{tikzpicture}
-    \end{frame}
-    
-    % Slide for time 3
-    \begin{frame}
+% Paralelno izvršavanje procesa - slajd vreme 2
+\begin{frame}
+\frametitle{Parallel Execution at Time 2}
+\begin{tikzpicture}[node distance=1cm]
+  % Nodes for Process 1
+  \node[process] (p1t1) {1};
+  \node[process, highlight, right=of p1t1] (p1t2) {1};
+  \node[process, right=of p1t2] (p1t3) {1};
+  \node[process, right=of p1t3] (p1t4) {1};
+
+  % Nodes for Process 2
+  \node[process, below=of p1t1] (p2t1) {2};
+  \node[process, highlight, right=of p2t1] (p2t2) {2};
+  \node[process, right=of p2t2] (p2t3) {2};
+
+% Arrows
+\draw[arrow] (p1t1) -- (p1t2);
+\draw[arrow] (p1t2) -- (p1t3);
+\draw[arrow] (p1t3) -- (p1t4);
+\draw[arrow] (p2t1) -- (p2t2);
+\draw[arrow] (p2t2) -- (p2t3);
+
+% Dashed lines and time labels
+\draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
+\draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
+\draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
+\end{tikzpicture}
+\end{frame}
+
+% Paralelno izvršavanje procesa - slajd vreme 3
+\begin{frame}
     \frametitle{Parallel Execution at Time 3}
     \begin{tikzpicture}[node distance=1cm]
-    % Nodes for Process 1
-    \node[process] (p1t1) {1};
-    \node[process, right=of p1t1] (p1t2) {1};
-    \node[process, highlight, right=of p1t2] (p1t3) {1};
-    
-    % Nodes for Process 2
-    \node[process, below=of p1t1] (p2t1) {2};
-    \node[process, right=of p2t1] (p2t2) {2};
-    \node[process, highlight, right=of p2t2] (p2t3) {2};
-    
-    % Arrows
-    \draw[arrow] (p1t1) -- (p1t2);
-    \draw[arrow] (p1t2) -- (p1t3);
-    \draw[arrow] (p2t1) -- (p2t2);
-    \draw[arrow] (p2t2) -- (p2t3);
-    
-    % Dashed lines and time labels
-    \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
-    \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
-    \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
+        % Nodes for Process 1
+        \node[process] (p1t1) {1};
+        \node[process, right=of p1t1] (p1t2) {1};
+        \node[process, highlight, right=of p1t2] (p1t3) {1};
+        \node[process, right=of p1t3] (p1t4) {1};
+        
+        % Nodes for Process 2
+        \node[process, below=of p1t1] (p2t1) {2};
+        \node[process, right=of p2t1] (p2t2) {2};
+        \node[process, highlight, right=of p2t2] (p2t3) {2};
+        
+        % Arrows
+        \draw[arrow] (p1t1) -- (p1t2);
+        \draw[arrow] (p1t2) -- (p1t3);
+        \draw[arrow] (p1t3) -- (p1t4);
+        \draw[arrow] (p2t1) -- (p2t2);
+        \draw[arrow] (p2t2) -- (p2t3);
+        
+        % Dashed lines and time labels
+        \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
+        \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
+        \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
     \end{tikzpicture}
-    \end{frame}
-    
+\end{frame}
+\begin{frame}
+    \frametitle{Parallel Execution at Time 3}
+    \begin{tikzpicture}[node distance=1cm]
+        % Nodes for Process 1
+        \node[process] (p1t1) {1};
+        \node[process, right=of p1t1] (p1t2) {1};
+        \node[process, right=of p1t2] (p1t3) {1};
+        \node[process, highlight, right=of p1t3] (p1t4) {1};
+        
+        % Nodes for Process 2
+        \node[process, below=of p1t1] (p2t1) {2};
+        \node[process, right=of p2t1] (p2t2) {2};
+        \node[process, right=of p2t2] (p2t3) {2};
+        
+        % Arrows
+        \draw[arrow] (p1t1) -- (p1t2);
+        \draw[arrow] (p1t2) -- (p1t3);
+        \draw[arrow] (p1t3) -- (p1t4);
+        \draw[arrow] (p2t1) -- (p2t2);
+        \draw[arrow] (p2t2) -- (p2t3);
+        
+        % Dashed lines and time labels
+        \draw[dotted, thick] ([yshift=1cm]p1t1.east) -- ([yshift=-2cm]p2t1.east) node[time label] {time 1};
+        \draw[dotted, thick] ([yshift=1cm]p1t2.east) -- ([yshift=-2cm]p2t2.east) node[time label] {time 2};
+        \draw[dotted, thick] ([yshift=1cm]p1t3.east) -- ([yshift=-2cm]p2t3.east) node[time label] {time 3};
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Dining philosopher problem}
+
+    Pet filozofa sedi za okruglim stolom i na smenu razmišljaju i jedu. Svaki ima ispred sebe tanjir sa špagetama i između svaka dva tanjira se nalazi viljuška. Da bi mogao da jede, filozofu trebaju dve viljuške. \newline
+
+    \begin{itemize}
+        \item Ne komuniciraju međusobno \newline
+        \item Ne mogu oteti viljušku \newline
+        \item Ne mogu slomiti viljušku \newline
+    \end{itemize}
+\end{frame}
 
 \begin{frame}
     \frametitle{Zastoj}
-
     \begin{center}
-        %\includegraphics[width=10cm]{img/deadlock.png}
+        \includegraphics[width=\linewidth]{img/deadlock_picture.png}    
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Zastoj}
+    \begin{center}
+        \includegraphics[height=0.9\textheight]{img/before_deadlock_diagram.png}
     \end{center}
 \end{frame}
 
@@ -546,7 +664,7 @@
 \begin{frame}
     \frametitle{Planeri procesa}
     \begin{center}
-        \large{Kako operativni sistem smenjuje procese?}
+        \LARGE{Kako operativni sistem smenjuje procese?}
     \end{center}
 \end{frame}
 
@@ -611,12 +729,55 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Load balancer}
+    \begin{itemize}
+        \item Raspoređuje procese na jezgra procesora \newline
+        \item Retko se radi jer oduzima puno vremena
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{???}
+    \begin{center}
+        \LARGE{A kako planer procesa preuzme kontrolu?}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{???}
+    \begin{center}
+        \LARGE{A kako planer procesa preuzme kontrolu?} \newline
+        \newline
+        \large{\textit{Nazad na matičnu ploču}}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Prekidi (\textit{interrupts})}
+    \begin{itemize}
+        \item Hardverski i softverski \newline
+        \item Interrupt handler \newline
+        \item Context switch \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Clock interrupt}
+    \begin{itemize}
+        \item Periodično slanje signala za prekid (\textit{interrupt}) \newline
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=9cm]{img/clock.png}
+    \end{center}
+\end{frame}
+
 \section*{}
 \subsection*{}
 \begin{frame}
-    \frametitle{Upravljane memorijom}
+    \frametitle{Upravljanje memorijom}
     \begin{center}
-        Kako se kontroliše upotrebna RAM-a?
+        \LARGE{Kako se kontroliše upotrebna RAM-a?}
     \end{center}
 \end{frame}
 
@@ -719,7 +880,7 @@
 \begin{frame}
     \frametitle{Fajl sistem}
     \begin{center}
-        \large{Šta je zapravo fajl?}
+        \LARGE{Šta je zapravo fajl?}
     \end{center}
 \end{frame}
 
@@ -735,14 +896,14 @@
 \begin{frame}
     \frametitle{Fajl sistemi}
     \begin{center}
-        Šta je fajl sistem?
+        \LARGE{Šta je fajl sistem?}
     \end{center}
 \end{frame}
 
 \begin{frame}
     \frametitle{Fajl sistemi}
     \begin{center}
-        Kako pronalazimo fajlove na disku?
+        \LARGE{Kako pronalazimo fajlove na disku?}
     \end{center}
 
 \end{frame}
@@ -816,19 +977,187 @@
 \end{frame}
 
 \subsection*{Pristup fajlu}
+
+% Define the style for the blocks
+\tikzset{block/.style={rectangle, draw, fill=white, text width=2em, text centered, minimum height=2em}}
+
+% Define the style for the arrows to use stealth
+\tikzset{arrow/.style={->,>=stealth', green, thick}}
+
+% Define the length of the array and modify it to stop at 5
+\newcommand{\n}{5}
+\newcommand{\lastn}{6} % Last position indicator
+
+% Slides for each individual set of arrows, progressively adding one more arrow
+\foreach \x in {2,...,\n}{
+  \begin{frame}
+  \frametitle{Sekvencijalno}
+  \vfill % Add vertical space to push the content to the center
+  \centering % Center the content horizontally
+  \begin{tikzpicture}
+  \node[block] (1) {1};
+  \foreach \y in {2,...,\n}{
+    \pgfmathtruncatemacro{\prevy}{\y - 1}
+    \node[block, right=0.5cm of \prevy] (\y) {\y};
+  }
+  % Add ellipses after block 5
+  \node[block, right=0.5cm of \n] (\lastn) {...};
+  \node[anchor=east] at (1.west) {Početak};
+  \node[anchor=west] at (\lastn.east) {Kraj};
+
+  % Draw the arrows as specified, for each slide add one more arrow
+  \foreach \z in {2,...,\x}{
+    \pgfmathtruncatemacro{\startz}{\z - 1}
+    \draw[arrow] (\startz) -- (\z);
+  }
+  \ifnum\x=\n
+    \node[block, fill=green!100] at (\n) {5}; % Highlight block 5
+  \fi
+
+  \end{tikzpicture}
+  \vfill % Add vertical space after the content to ensure it's centered
+  \end{frame}
+}
+
 \begin{frame}
-    \frametitle{Sekvencijalno}
-    \begin{center}
-        %\includegraphics[width=10cm]{img/sequential_file_access.png}
-    \end{center}
+    \frametitle{Direktno/nasumično}
+\begin{center}
+\begin{tikzpicture}[
+  start chain=going right,
+  node distance=0pt,
+  box/.style={
+    draw,
+    minimum width=1cm,
+    minimum height=0.75cm,
+    on chain,
+    inner sep=0pt,
+    outer sep=0pt,
+    text centered
+  },
+  arr/.style={
+    -{Latex[length=3mm]},
+    thick,
+    green
+  }
+]
+
+% Boxes
+\node [box] (1) {1};
+\node [box] (2) {2};
+\node [box] (3) {3};
+\node [box] (4) {4};
+\node [box] (5) {5};
+\node [box] (6) {6};
+\node [box] (dots) {\dots};
+\node [box] (n) {n};
+
+% Labels aligned with boxes
+\node [below=of 1.south, anchor=north] {Početak};
+\node [below=of n.south, anchor=north] {Kraj};
+
+% Arrow pointing to box 3 from below
+\draw [arr] ([yshift=-1cm]3.south) -- (3.south);
+
+\end{tikzpicture}
+\end{center}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Direknot/nasumično}
+    \frametitle{Direktno/nasumično}
     \begin{center}
-        %\includegraphics[width=10cm]{img/dirrect_access.png}
-    \end{center}
+        \begin{tikzpicture}[
+            start chain=going right,
+            node distance=0pt,
+            box/.style={
+                draw,
+                minimum width=1cm,
+                minimum height=0.75cm,
+                on chain,
+                inner sep=0pt,
+                outer sep=0pt,
+                text centered
+  },
+  arr/.style={
+    -{Latex[length=3mm]},
+    thick,
+    green
+  }
+]
+
+% Boxes
+% (Same as previous slide)
+% Boxes
+\node [box] (1) {1};
+\node [box] (2) {2};
+\node [box] (3) {3};
+\node [box] (4) {4};
+\node [box] (5) {5};
+\node [box] (6) {6};
+\node [box] (dots) {\dots};
+\node [box] (n) {n};
+
+% Labels aligned with boxes
+\node [below=of 1.south, anchor=north] {Početak};
+\node [below=of n.south, anchor=north] {Kraj};
+
+% Labels
+% (Same as previous slide)
+
+% Arrow pointing to box 3 from below
+% (Same as previous slide)
+\draw [arr] ([yshift=-1cm]3.south) -- (3.south);
+
+% Arch arrow from 3 to 4
+\draw [arr, bend left=45] (3.north) to (4.north);
+
+\end{tikzpicture}
+\end{center}
 \end{frame}
+
+\begin{frame}
+    \frametitle{Direktno/nasumično}
+\begin{center}
+\begin{tikzpicture}[
+  start chain=going right,
+  node distance=0pt,
+  box/.style={
+    draw,
+    minimum width=1cm,
+    minimum height=0.75cm,
+    on chain,
+    inner sep=0pt,
+    outer sep=0pt,
+    text centered
+  },
+  arr/.style={
+    -{Latex[length=3mm]},
+    thick,
+    green
+  }
+]
+
+\node [box] (1) {1};
+\node [box] (2) {2};
+\node [box] (3) {3};
+\node [box] (4) {4};
+\node [box, fill=green!100] (5) {5};
+\node [box] (6) {6};
+\node [box] (dots) {\dots};
+\node [box] (n) {n};
+
+\node [below=of 1.south, anchor=north] {Početak};
+\node [below=of n.south, anchor=north] {Kraj};
+
+\draw [arr] ([yshift=-1cm]3.south) -- (3.south);
+
+\draw [arr, bend left=45] (3.north) to (4.north);
+
+\draw [arr, bend left=45] (4.north) to (5.north);
+
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
 
 \begin{frame}
     \frametitle{Preko indeksa}
@@ -837,7 +1166,6 @@
         \item Brzina i efikasnost
     \end{itemize}
 \end{frame}
-
 
 \subsection*{}
 
@@ -917,9 +1245,17 @@
         \item Loši blokovi \newline
         \item Backup (sigurnosne kopije)
     \end{itemize}
+\end{frame}
 
-    
-
+\begin{frame}
+    \frametitle{RAID - \textit{Redundant Array of Independent Disks}}
+    \begin{itemize}
+        \item Pravljenje backup-a fajlova \newline
+        \item RAID 0 \newline
+        \item RAID 1 \newline
+        \item RAID 5 \newline
+        \item RAID 10 \newline
+    \end{itemize}
 \end{frame}
 
 \subsection*{}
