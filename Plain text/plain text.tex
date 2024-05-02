@@ -1,0 +1,359 @@
+\documentclass{beamer}
+\usepackage{xcolor}
+\usepackage{listings}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\usepackage{wasysym}
+
+\usepackage{newunicodechar}
+
+
+
+
+\usetheme[]{Madrid}
+
+%\def\ucr{X}
+%\newunicodechar{�}{\ucr}
+
+\title{UNDEFINED CHARACTER}
+\author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
+\institute{Istraživačka stanica Petnica}
+\titlegraphic{\includegraphics[width=2cm]{img/petnica.png}}
+\date{07.04.2024.}
+
+
+\lstset{language=C,keywordstyle={\bfseries \color{blue}}}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Uvod}
+%\begin{center}
+    %\includegraphics[width=10cm]{img/bugs_bugs_everywhere.png}
+%\end{center}
+\begin{itemize}
+  \item Šta je ovo predavanje?
+\end{itemize}
+\end{frame}
+
+\section*{Uvod}
+\begin{frame}
+  \frametitle{Needle Telegraph}
+  \begin{center}
+    \includegraphics[width=10cm]{img/needle telegraph.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Needle Telegraph}
+  \begin{center}
+    \includegraphics[height=8cm]{img/needle telegraph letters.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Morse Code}
+
+  \begin{center}
+    \includegraphics[height=8cm]{img/morse code.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pojava računara i uvođenje standarda}
+  \begin{itemize}
+    \item \textbf{Ali pre toga} \newline
+    \item Teletype computers \newline
+    \item Bušene kartice
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Teletype Computers}
+  \begin{center}
+    \includegraphics[width=10cm]{img/teletype computer.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Bušene kartice}
+  \begin{center}
+    \includegraphics[width=10cm]{img/busene kartice.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ASCII}
+  \begin{center}
+    \includegraphics[width=12cm]{img/ascii.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ispis karaktera}
+  \begin{lstlisting}[language=C]
+    #include <stdio.h>
+
+    int main(){
+      char test;
+      test = 'a';
+
+      printf("%c", test);
+      printf("\n");
+      printf("%d", test);
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ispis karaktera}
+  \begin{center}
+    \includegraphics[width=12cm]{img/ispis teksta terminal.png}
+  \end{center}
+\end{frame}
+
+\section*{ASCII}
+\begin{frame}
+  \frametitle{Kontrolni karakteri}
+  \begin{center}
+    \includegraphics[height=7cm]{img/ascii kontrolni karakteri.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LF vs CRLF}
+  \begin{center}
+    \includegraphics[width=12cm]{img/LF_CRLF.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LF vs CRLF}
+  \begin{center}
+    \includegraphics[width=12cm]{img/hex_line_ending.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ASCII - brojevi}
+  \begin{center}
+    \includegraphics[height=7.5cm]{img/ascii brojevi.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ASCII - slova}
+  \begin{center}
+    \includegraphics[width=12cm]{img/ascii slova.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Šta je sa osmim bitom?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Code Page - 473}
+  \begin{center}
+    \includegraphics[width=12cm]{img/code page 473.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{I super, nemamo problema :D }
+\end{frame}
+
+\begin{frame}
+  \frametitle{I super, nemamo problema :D }
+  Zar ne?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problemi na različitim sistemima}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UTF-8}
+  \begin{itemize}
+    \item Unicode Transformation Format - 8 bitova \newline
+    \item Prvih 128 karaktera je isto kao i za ASCII \newline
+    \item replacement character %(�) - U+FFFD \newline
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UTF-8}
+  \begin{itemize}
+    \item \textbf{combining character} \newline
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=12cm]{img/combining character.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UTF-8 encoding}
+  \begin{center}
+    \includegraphics[width=12cm]{img/utf8 encoding.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Uh - oh...}
+  \begin{center}
+    \Huge Hakovani smo!?
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ili ne\dots}
+  \begin{itemize}
+    \item UTF16
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=10cm]{img/utf16.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Emoji}
+  \begin{center}
+    \Huge Kako imamo smajlije?
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{PLATO IV}
+  \begin{center}
+    \includegraphics[width=9cm]{img/plato iv.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Emoji}
+  \begin{itemize}
+    \item Japan \newline
+    \item Oxford uvodi u rečnik - 2013 \newline
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Emoji}
+  \begin{center}
+    \includegraphics[height=5cm]{img/emoji.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{emojicode}
+  \begin{center}
+    \includegraphics[height=5cm]{img/emojicode.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Da li imamo probleme sa platformama?}
+  \begin{center}
+    \includegraphics[height=7cm]{img/razlicite platforme.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ipak da\dots}
+  \begin{center}
+    \includegraphics[width=12cm]{img/problemi sa razlicitim platformama.jpg}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Spajanje emoji-a}
+  \begin{center}
+    \includegraphics[width=10cm]{img/spajanje emojia.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Spajanje emoji-a nije uvek očigledno}
+  \begin{center}
+    \includegraphics[width=10cm]{img/spajanje emojia neocekivano.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kako pravimo piratsku zastavu?}
+  \begin{center}
+    \includegraphics[width=5cm]{img/piratska zastava.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kako pravimo piratsku zastavu?}
+  \begin{center}
+    \includegraphics[width=5cm]{img/lobanja zastave.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kako pravimo piratsku zastavu?}
+  \begin{center}
+    \includegraphics[width=5cm]{img/lobanja i zastava.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Regional Indicator Symbol}
+  \begin{itemize}
+    \item Par simbola identifikuje emoji zastavu
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[width=12cm]{img/regional indicator symbol.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kraj? }
+  \begin{center}
+      \Huge Kraj?    
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reference}
+  \begin{itemize}
+    \item Plain Text - Dylan Beattie - NDC Oslo 2021 \newline
+    \item Emoji how do they even work - MacLemon \newline
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{HVALA NA PAŽNJI!}
+    \begin{center}
+        \Huge Pitanja?    
+    \end{center}
+\end{frame}
+
+\end{document}

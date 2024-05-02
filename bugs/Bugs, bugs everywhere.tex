@@ -15,8 +15,8 @@
 \subtitle[]{\textit{ - Pregled nekih zanimljivih bagova -}}
 \author[Diana Šantavec]{Diana Šantavec \\ \small \url{diana.santavec@gmail.com}}
 \institute{Istraživačka stanica Petnica}
-\titlegraphic{\includegraphics[width=2cm]{img/Petnica.png}}
-\date{23.04.2023.}
+\titlegraphic{\includegraphics[width=2cm]{img/petnica.png}}
+\date{07.04.2024.}
 
 
 \lstset{language=C,keywordstyle={\bfseries \color{blue}}}
@@ -46,15 +46,47 @@
 \begin{frame}
 \frametitle{Uvod}
 \begin{center}
-    \includegraphics[width=10cm]{img/bugs_bugsEverywhere.png}
+    \includegraphics[width=10cm]{img/bugs_bugs_everywhere.png}
 \end{center}
 \end{frame}
+
+%\begin{frame}
+%    \frametitle{Literally everywhere}
+%    \begin{center}
+%        \includegraphics[width=12cm]{img/bus.png}
+%    \end{center}
+%\end{frame}
+
+\begin{frame}
+    \frametitle{Literally everywhere}
+    \begin{center}
+        \includegraphics[width=12cm]{img/a_lot_of_errors.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Literally everywhere}
+    \begin{center}
+        \includegraphics[width=10cm]{img/train.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Literally everywhere}
+    \begin{center}
+        \includegraphics[width=10cm]{img/enp.jpeg}
+    \end{center}
+\end{frame}
+
+% Prilazi auto sa prikolicom. ENP tag se čuje, daje signal da je naplatio i da može da prođe
+% Dešava se bug u backend-u i sistem zapravo nije naplatio, te nije podigao rampu
+% Kako je vozač čuo signal, daje gas i ne stiže da stane, te udara u rampu
 
 \begin{frame}
     \frametitle{Poreklo naziva}
     \begin{center}
-        \includegraphics[width=5cm]{img/vacuum_tube.jpg}
-        \includegraphics[width=5cm]{img/first_generation.jpg}
+        \includegraphics[width=5cm]{img/vacuum_tube.png}
+        \includegraphics[width=5cm]{img/first_generation.png}
     \end{center}
     \begin{itemize}
         \item Računari prve generacije (1940-1960) \newline
@@ -65,7 +97,7 @@
 \begin{frame}
     \frametitle{Poreklo naziva}
     \begin{center}
-        \includegraphics[width=8cm]{img/grace_hopper.png}
+        \includegraphics[width=8cm]{img/bug_in_notes.png}
     \end{center}
     \begin{itemize}
         \item Dr Grace Hopper (09.09.1947)
@@ -113,9 +145,20 @@
 \frametitle{Ali radi na mom računaru...}
 \begin{itemize}
     \item \textbf{Situacija:} Kod pisan na Windows-u radi, ali kada se prebaci na Linux sistem i kompajlira, vraća grešku \newline
-    \item \textbf{Problem:} Različiti kraj linija \newline
-    \item \textbf{Obrazloženje:} na Windows-u se koristi CRLF a na Linux-u LF
 \end{itemize}
+    \begin{center}
+        \includegraphics[width=10cm]{img/LF_CRLF.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ali radi na mom računaru...}
+    \begin{itemize}
+        \item \textbf{Problem:} Različiti kraj linija \newline
+        \item \textbf{Obrazloženje:} na Windows-u se koristi CRLF a na Linux-u LF
+    \end{itemize}
+    
+
 \end{frame}
 
 \begin{frame}
@@ -125,17 +168,33 @@
         \item Unix: izbacio CR        \newline
     \end{itemize}
     \begin{center}
-        \includegraphics[width=12cm]{img/Table.png}
+        \includegraphics[width=12cm]{img/hex_line_ending.png}
     \end{center}
     \end{frame}
 
 \begin{frame}
-    \frametitle{Ali radi na mom računaru...}
+    \frametitle{Ali radi na mom računaru...}    
     \begin{center}
-        \includegraphics[width=11cm]{img/ASCII.png}
+        \includegraphics[width=12cm]{img/ascii_table.png}
     \end{center}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Ali radi na mom računaru...}
+    \begin{itemize}
+        \item \textbf{Situacija:} Iz logova se izvlači timestamp i poredi se da li je isti kao i očekivan \newline
+        \item Poređenje se radi sa \textit{datetime} objekata, tako da se string pretvara u \textit{datetime} objekat \newline
+        \item Kada se test pokrene na lokalnom računaru, prolazi, ali na serveru ne
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ali radi na mom računaru...}
+    \begin{itemize}
+        \item \textbf{Problem:} Različiti formati datuma na samom operativnom sistemu \newline
+        \item \textbf{Obrazloženje:} C\# kada konvertuje string u datum uzima regionalna podešavanja operativnog sistema \newline
+    \end{itemize}
+\end{frame}
 
 \begin{frame}
 \frametitle{Weird filenames making weird behaviours}
@@ -171,10 +230,28 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Linux - linkovi}
+    \begin{itemize}
+        \item \textbf{Situacija:} Ne može da se uloguje, login dugme stoji kao da je non stop pritisnuto, ali može da kuca druge stvari \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linux - linkovi}
+    \begin{itemize}
+        \item \textbf{Obrazloženje:} Postojali instalirani python2 i python3 \newline
+        \item Kada se u terminalu ukuca python pokrece python2 \newline
+        \item Pokušaj rešenja je bio da obriše python2 i napravi simbolički link na python kroz python3 \newline
+        \item \textbf{Problem:} Sistem je koristio python2 za neke stvari \newline
+        \item \textbf{Rešenje:} Ući u live sistem, obrisati link i instalirati python2 \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
     \frametitle{Čudna poruka na ekranu}
 
     \begin{center}
-        \includegraphics[width=10cm]{img/PC_Load_Letter.jpg}
+        \includegraphics[width=12cm]{img/PC_Load_Letter.jpg}
     \end{center}
     
 
@@ -193,15 +270,79 @@
 \begin{frame}
     \frametitle{General Failure}
     \begin{center}
-        \includegraphics[width=10cm]{img/general_failure_screen.jpg}
+        \includegraphics[width=12cm]{img/general_failure_screen.jpg}
     \end{center}
 \end{frame}
 
 \begin{frame}
     \frametitle{General Failure}
     \begin{center}
-        \includegraphics[width=10cm]{img/general_failure.jpeg}
+        \includegraphics[width=12cm]{img/general_failure.jpg}
     \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The 500-mile email}
+    \begin{itemize}
+        \item \textbf{Situacija:} Podešen je novi mail server i kada se šalje mail na univerzitet koji je udaljen više od oko 520 milja, mail ne biva poslat
+    \end{itemize}
+    \vspace{1cm}
+    \begin{center}
+        \LARGE \textbf{Zašto?}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The 500-mile email}
+    \begin{itemize}
+        \item Konfiguracija je pisana na novijem SunOS sa Sendmail8, a koristio se stari \newline
+        \item Sendmail5 je imao predefinisanu vrednost vremena za čekanje od 0s i ukoliko u 0s ne dobije odgovor smatra je neuspešno slanje \newline
+        \item Postoji mali prozor vremena, koji ukoliko server koji prima mail nije pod velikim load-om \newline
+        \item Brzina svetlosti u optičkom kablu sa zakašnjenjem u ruteru i serveru daje oko 500 milja 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ali i u Petnici\dots}
+    \begin{itemize}
+        \item Na ruter je postavljena konfiguracija sa drugog rutera \newline
+        \item Postojala je razlika u verzijama sistema na ruterima \newline
+        \item Konfiguracija je bila za stariju verziju sistema i sve razlike u parametrima je sam dopunio \newline
+        \item Problem kada je ruter postavljen je što je deo mreže radio, a deo nije, jer je deo konfiguracije padao
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{HTTP kodovi za greške}
+    \begin{itemize}
+        \item 400 - Bad Request \newline
+        \item 403 - Forbidden \newline
+        \item 404 - Not Found \newline
+        \item \textbf{418 - ?} \newline
+        \item 451 - Unavailable For Legal Reasons \newline
+        \item 500 - Internal Server Error \newline    
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{HTTP kodovi za greške}
+    \begin{itemize}
+        \item 400 - Bad Request \newline
+        \item 403 - Forbidden \newline
+        \item 404 - Not Found \newline
+        \item \textbf{418 - I'm a teapot} \newline
+        \item 451 - Unavailable For Legal Reasons \newline
+        \item 500 - Internal Server Error \newline 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{418 - I'm a teapot}
+    \begin{itemize}
+        \item HTCPCP: Protokol za kontrolu, monitoring i dijagnostifikovanje kuvala za kafu \newline
+        \item Prvoaprilska šala \newline
+        \item Emacs implementirao klijentsku stranu \newline
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -213,7 +354,6 @@
         \item log4j \newline
     \end{itemize}
 \end{frame}
-
 
 \section{Bagovi sa tipovima}
 
@@ -256,7 +396,7 @@
     \end{itemize}
 
     \begin{center}
-        \includegraphics[width=10cm]{img/32bit_ieee754.png}
+        \includegraphics[width=11cm]{img/32bit_ieee754.png}
     \end{center}
 \end{frame}
 
@@ -275,9 +415,74 @@
         \item \textbf{Obrazloženje:} u bazi je polje char (6) a brojevi se zapisuju u formatu rimskih brojeva \newline
         \item XXXVIII
     \end{itemize}
+\end{frame}
 
-    
+\begin{frame}
+    \frametitle{Švajcarski vozovi duhovi}
+    \begin{itemize}
+        \item \textbf{Situacija:} Vozovi nestaju iz sistema \newline
+        \item \textbf{Problem:} Brojač osovina je 8bitni broj (do 256) \newline
+        \item \textbf{Obrazloženje:} Kada prođe voz sa tačno 256 osovina, desi se overflow i brojač se resetuje na 0, te se voz više ne vidi \newline
+        \item \textbf{Rešenje: ?}
+    \end{itemize}
+\end{frame}
 
+\begin{frame}
+    \frametitle{Švajcarski vozovi duhovi}
+    \begin{itemize}
+        \item \textbf{Rešenje: } Promena regulativa, zabranjeni vozovi sa 256 osovina
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=12cm]{img/ghost_train.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Random is not random}
+    \begin{center}
+        \includegraphics[width=12cm]{img/Random Dilbert.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Random is not random}
+    \begin{itemize}
+        \item Harverski random brojevi \newline
+        \item Pseudorandom brojevi \newline
+        \item Algoritam radi sa \textit{seed-om} \newline
+        \item 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Lavarand (Silicon graphics)}
+    \begin{center}
+        \includegraphics[width=12cm]{img/Lavarand.jpg}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Press your luck}
+    \begin{center}
+        \includegraphics[width=10cm]{img/Press_your_luck.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Press your luck}
+    \begin{itemize}
+        \item Vozač kamiona za sladoled Michael Larson - 110,237\$ (8 puta više od prosečnog igrača) \newline
+        \item Prvo se odgovara na trivija pitanja i tako se zarađuju "spinovi" \newline
+        \item Jako se kratko zadržava na slikama, te je odabir nasumičan \newline
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Press your luck}
+    \begin{itemize}
+        \item Zapravo je postojalo 5 predefinisanih krugova \newline
+        \item Snimao epizode i uočio i zapamtio sekvencu \newline
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -293,7 +498,7 @@
 \begin{frame}
     \frametitle{NULL - "billion-dollar mistake"}
     \begin{center}
-        \includegraphics[width=6.5cm]{img/ALGOL60.jpg}    
+        \includegraphics[width=6.5cm]{img/ALGOL60.png}    
     \end{center}
 \end{frame}
 
@@ -331,6 +536,14 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Steve Null}
+    \begin{itemize}
+        \item HR unese zaposlenog i on nestane iz tabele \newline
+        \item Problem sa prezimenom
+    \end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]
     \frametitle{Najskuplja '-'}
     
@@ -347,7 +560,7 @@
 \begin{frame}
     \frametitle{Greška u orbiti Marsa}
     \begin{itemize}
-        \item Mars Climate Orbiter \newline
+        \item Mars Climate Orbiter (1998) \newline
         \item \textbf{Situacija:} Orbiter prilazi Marsu i odjednom pada \newline
         \item \textbf{Problem: } Različite merne jedinice (mm i in) \newline
         \item Lockheed Martin koristio inče \newline
@@ -365,7 +578,7 @@
 \begin{frame}
     \frametitle{Ariane 5}
     \begin{itemize}
-        \item European Space Agency \newline
+        \item European Space Agency (1996)\newline
         \item Floating point bug - integer overflow \newline
         \item \textbf{Situacija:} Raketa je nedugo nakon uzletanja skrenula i eksplodirala \newline
         \item 500.000.000\$
@@ -394,7 +607,8 @@
     \frametitle{Slični bagovi}
     \begin{itemize}
         \item Boeing 737 MAX \newline
-        \item Knight Capital
+        \item Knight Capital \newline
+        \item Therac-25 \newline
     \end{itemize}
 \end{frame}
 
@@ -412,7 +626,7 @@
         \item Grey-box testing \newline
     \end{itemize}
     \begin{center}
-        \includegraphics[width=10cm]{img/intentional_bugs.png}
+        \includegraphics[width=11cm]{img/intentional_bugs.png}
     \end{center}
 \end{frame}
 
@@ -426,7 +640,7 @@
 \begin{frame}
     \frametitle{Minecraft}
     \begin{center}
-        \includegraphics[width=7cm]{img/minecraft_farlands.png}
+        \includegraphics[width=8cm]{img/farlands_grid.png}
     \end{center}
 \end{frame}
 
@@ -464,7 +678,14 @@
 \begin{frame}
     \frametitle{Wing Commander}
     \begin{center}
-        \includegraphics[width=10cm]{img/wing_commander.png}
+        \includegraphics[width=12cm]{img/wing_commander.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Wing Commander}
+    \begin{center}
+        \includegraphics[width=12cm]{img/wing_commander.png}
     \end{center}
     \begin{itemize}
         \item Poruka greške pretvorena u pozdravnu poruku
