@@ -4,7 +4,7 @@ marp: true
 
 <!-- paginate: true -->
 
-# UNIX!
+# UNIX
 ## Diana Šantavec
 diana.santavec@gmail.com
 12.08.2022.
